@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: #FFFBB0;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagerController">
+   <children>
+      <BorderPane layoutX="6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <BorderPane.margin>
+                  <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+               </padding>
+               <children>
+                  <Button fx:id="employeeButton" alignment="CENTER" mnemonicParsing="false" onKeyPressed="#employeePressed" onMouseClicked="#employeeClicked" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: D53200;" text="List Employees" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Arial Bold" size="34.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="inventoryButton" alignment="CENTER" mnemonicParsing="false" onKeyPressed="#inventoryPressed" onMouseClicked="#inventoryClicked" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: D53200;" text="Stock" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Arial Bold" size="34.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="productButton" alignment="CENTER" mnemonicParsing="false" onKeyPressed="#productPressed" onMouseClicked="#productClicked" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: D53200;" text="Prices" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Arial Bold" size="34.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="economyButton" alignment="CENTER" mnemonicParsing="false" onKeyPressed="#economyPressed" onMouseClicked="#economyClicked" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: D53200;" text="Accounting" textAlignment="CENTER" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Arial Bold" size="34.0" />
+                     </font>
+                  </Button>
+               </children>
+            </GridPane>
+         </center>
+         <top>
+            <GridPane alignment="CENTER" prefHeight="118.0" prefWidth="1200.0" style="-fx-background-color: #D53200;" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="550.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.60003662109375" minWidth="10.0" prefWidth="200.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <padding>
+                  <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+               </padding>
+               <children>
+                  <Label alignment="CENTER" mouseTransparent="true" prefHeight="58.0" prefWidth="405.0" text="Group17 Cinema Center" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Role" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameSurnameLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Name Surname" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="logout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyPressed="#logoutPressed" onMouseClicked="#logoutClicked" prefHeight="35.0" prefWidth="162.0" text="LOGOUT" textAlignment="CENTER" textFill="#990000" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="Bell MT Bold" size="21.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.48" />
+                     </effect>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </top>
+      </BorderPane>
+   </children>
+</AnchorPane>
