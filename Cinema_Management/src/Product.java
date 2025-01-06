@@ -7,32 +7,27 @@ public class Product {
     private String productName; // VARCHAR
     private double price;       // DOUBLE
     private int stock;          // INT
-    private int normalsell;           // INT
-    private int agebased_discountedSell;           // INT
     private byte[] visuals;     // BLOB (PNG stored as byte[])
     private double agebased_disc_rate;
+    private int sold;
+
+    public double productsRevenue;
+    public double taxAmount;
 
 
     //////////////////////////////////////////////
     /// FROM calculateRevenueAndTaxes METHOD
 
-    private double taxRate; // New field
-    private double revenue; // net revenue
-    private double taxAmount; // paid taxes 
-    private int totalSold;
-
-    
 
     // Constructor
-    public Product(int id, String productName, double price, int stock, int normalsell,int agebased_discountedSell, byte[] visuals, double agebased_disc_rate) {
+    public Product(int id, String productName, double price, int stock, byte[] visuals, double agebased_disc_rate, int sold) {
         this.id = id;
         this.productName = productName;
         this.price = price;
         this.stock = stock;
-        this.normalsell = normalsell;
-        this.agebased_discountedSell = agebased_discountedSell;
         this.visuals = visuals;
         this.agebased_disc_rate = agebased_disc_rate;
+        this.sold = sold;
     }
 
 
@@ -45,38 +40,14 @@ public class Product {
         this.agebased_disc_rate = agebased_disc_rate;
     }
 
-    public double getTaxRate() {
-        return taxRate;
+    public void sold_amount(int amount)
+    {
+        this.sold += amount;
     }
-
-    public void setTaxRate(double taxRate) {
-        this.taxRate = taxRate;
+    public int getSold()
+    {
+        return sold;
     }
-
-    public double getRevenue() {
-        return revenue;
-    }
-
-    public void setRevenue(double revenue) {
-        this.revenue = revenue;
-    }
-
-    public double getTaxAmount() {
-        return taxAmount;
-    }
-
-    public void setTaxAmount(double taxAmount) {
-        this.taxAmount = taxAmount;
-    }
-
-    public int getTotalSold() {
-        return totalSold;
-    }
-
-    public void setTotalSold(int totalSold) {
-        this.totalSold = totalSold;
-    }
-
 
     // Getters and Setters
     public int getId() {
@@ -100,7 +71,8 @@ public class Product {
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        
+        this.price = price - (price * agebased_disc_rate);
     }
 
     public int getStock() {
@@ -109,22 +81,6 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
-    }
-
-    public int getNormalsell() {
-        return normalsell;
-    }
-
-    public void setNormalsell(int sold) {
-        this.normalsell = sold;
-    }
-
-    public int get_agebased_discountedSell() {
-        return agebased_discountedSell;
-    }
-
-    public void set_agebased_discountedSell(int agebased_discountedSell) {
-        this.agebased_discountedSell = agebased_discountedSell;
     }
 
     public byte[] getVisuals() {
@@ -143,7 +99,6 @@ public class Product {
                 ", productName='" + productName + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
-                ", sold=" + normalsell +
                 ", visuals=" + (visuals != null ? "PNG image loaded" : "No image") +
                 '}';
     }
