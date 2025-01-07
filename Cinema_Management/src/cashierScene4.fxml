@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: FFFBB0;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Scene4Controller">
+   <children>
+      <BorderPane layoutX="6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <GridPane alignment="CENTER" prefHeight="118.0" prefWidth="1200.0" style="-fx-background-color: #D53200;" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="550.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.60003662109375" minWidth="10.0" prefWidth="200.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <BorderPane.margin>
+                  <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+               </padding>
+               <children>
+                  <Label alignment="CENTER" mouseTransparent="true" prefHeight="58.0" prefWidth="405.0" text="Group17 Cinema Center" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Role" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameSurnameLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Name Surname" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="logout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyPressed="#logoutPressed" onMouseClicked="#logoutClicked" prefHeight="35.0" prefWidth="162.0" text="LOGOUT" textAlignment="CENTER" textFill="#990000" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="Bell MT Bold" size="21.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.48" />
+                     </effect>
+                  </Button>
+                  <Button fx:id="backButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyPressed="#backPressed" onMouseClicked="#backClicked" prefHeight="35.0" prefWidth="162.0" text="BACK" textAlignment="CENTER" textFill="#990000" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="21.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.48" />
+                     </effect>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+            </GridPane>
+         </top>
+         <center>
+            <GridPane alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1400.0" minWidth="10.0" prefWidth="499.7333129882812" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1400.0" minWidth="10.0" prefWidth="699.8666870117187" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="291.1999572753906" minHeight="10.0" prefHeight="257.0666564941406" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <GridPane alignment="CENTER">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.6666259765625" minWidth="10.0" prefWidth="337.6666259765625" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="272.5999755859375" minWidth="10.0" prefWidth="220.3333740234375" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="343.0" text="Final Price" textAlignment="RIGHT" textFill="#007b02">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="31.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                 </GridPane.margin>
+                                 <effect>
+                                    <Glow level="0.61" />
+                                 </effect>
+                              </Label>
+                              <Button fx:id="buyButton" defaultButton="true" mnemonicParsing="false" onMouseClicked="#buyClicked" prefHeight="68.0" prefWidth="184.0" text="BUY" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="22.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Label fx:id="finalPriceLabel" prefHeight="51.0" prefWidth="343.0" text="10 ₺" textAlignment="RIGHT" textFill="#007b02" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="31.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                                 </GridPane.margin>
+                                 <effect>
+                                    <Glow level="0.61" />
+                                 </effect>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="173.0" prefWidth="410.0" style="-fx-background-color: #D53200;">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="115.0" prefWidth="191.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@pics/beverage.png" />
+                                 </image>
+                                 <effect>
+                                    <ColorAdjust brightness="0.55" contrast="-0.79" hue="1.0" saturation="0.32" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <Label fx:id="currentBeveragePrice" alignment="CENTER" prefHeight="45.0" prefWidth="232.0" text="3.45 ₺" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="26.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <opaqueInsets>
+                              <Insets right="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="115.0" prefWidth="191.0">
+                           <children>
+                              <Button fx:id="plusBeverageButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#plusBeverage" prefHeight="24.0" prefWidth="118.0" text="+">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="14.0" right="14.0" top="14.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="selectedBeverageLabel" alignment="CENTER" prefHeight="55.0" prefWidth="154.0" text="1" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="27.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Button fx:id="minusBeverageButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#minusBeverage" prefHeight="24.0" prefWidth="118.0" text="-">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="15.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <opaqueInsets>
+                              <Insets left="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                     </children>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="173.0" prefWidth="410.0" style="-fx-background-color: #D53200;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="115.0" prefWidth="191.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@pics/popcorn.png" />
+                                 </image>
+                                 <effect>
+                                    <ColorAdjust brightness="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <Label fx:id="currentFoodPrice" alignment="CENTER" prefHeight="45.0" prefWidth="232.0" text="3.45 ₺" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="26.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <opaqueInsets>
+                              <Insets right="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="149.0" prefWidth="174.0">
+                           <children>
+                              <Button fx:id="plusFoodButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#plusFood" prefHeight="20.0" prefWidth="118.0" text="+">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="14.0" right="14.0" top="14.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="selectedFoodLabel" alignment="CENTER" prefHeight="17.0" prefWidth="154.0" text="1" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="27.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Button fx:id="minusFoodButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#minusFood" prefHeight="13.0" prefWidth="118.0" text="-">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="15.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <opaqueInsets>
+                              <Insets left="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                     </children>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="173.0" prefWidth="410.0" style="-fx-background-color: #D53200;" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="115.0" prefWidth="191.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@pics/toy.png" />
+                                 </image>
+                                 <effect>
+                                    <ColorAdjust brightness="0.11" contrast="-0.55" hue="-0.33" saturation="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <Label fx:id="currentToyPrice" alignment="CENTER" prefHeight="45.0" prefWidth="232.0" text="3.45 ₺" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="26.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <opaqueInsets>
+                              <Insets right="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="115.0" prefWidth="191.0">
+                           <children>
+                              <Button fx:id="plusToyButton" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#plusToy" prefHeight="24.0" prefWidth="118.0" text="+">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="14.0" right="14.0" top="14.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="selectedToyLabel" alignment="CENTER" prefHeight="55.0" prefWidth="154.0" text="1" textFill="WHITE">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="27.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Button fx:id="minusToyButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#minusToy" prefHeight="24.0" prefWidth="118.0" text="-">
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="Bell MT Bold" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="14.0" left="14.0" right="14.0" top="15.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <opaqueInsets>
+                              <Insets left="7.0" />
+                           </opaqueInsets>
+                        </VBox>
+                     </children>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <GridPane alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.6666259765625" minWidth="10.0" prefWidth="337.6666259765625" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="272.5999755859375" minWidth="10.0" prefWidth="220.3333740234375" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="343.0" text="Product Price :" textAlignment="RIGHT">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="productPriceLabel" prefHeight="51.0" prefWidth="343.0" text="10 ₺" textAlignment="RIGHT" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="343.0" text="Product Tax :" textAlignment="RIGHT" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="productTaxLabel" prefHeight="51.0" prefWidth="343.0" text="10 ₺" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="140.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                     </children>
+                  </GridPane>
+                  <GridPane alignment="CENTER" GridPane.columnIndex="1">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.6666259765625" minWidth="10.0" prefWidth="337.6666259765625" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="272.5999755859375" minWidth="10.0" prefWidth="220.3333740234375" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="343.0" text="Ticket Price :" textAlignment="RIGHT">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="ticketPriceLabel" prefHeight="51.0" prefWidth="343.0" text="10 ₺" textAlignment="RIGHT" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="343.0" text="Ticket Tax :" textAlignment="RIGHT" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="ticketTaxLabel" prefHeight="51.0" prefWidth="343.0" text="10 ₺" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Bell MT Bold" size="31.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="14.0" left="14.0" right="140.0" top="14.0" />
+                           </GridPane.margin>
+                        </Label>
+                     </children>
+                  </GridPane>
+               </children>
+               <padding>
+                  <Insets bottom="14.0" />
+               </padding>
+            </GridPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

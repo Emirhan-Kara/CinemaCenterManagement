@@ -92,6 +92,7 @@ public class LoginController
                 case "admin":
                     break;
                 case "cashier":
+                    App.loadScene("cashierScene1.fxml");
                     break;
             }
         }

@@ -1,12 +1,12 @@
-import java.sql.Time;
 import java.sql.Date;
+import java.sql.Time;
 
 public class Sessions {
-    public int id;
-    public int hallId;
-    public int movieId;
-    public Date date; // Fully qualified name
-    public Time time; // Fully qualified name
+    private int id;
+    private int hallId;
+    private int movieId;
+    private Date date;
+    private Time time;
 
     public Sessions(int id, int hallId, int movieId, Date date, Time time) {
         this.id = id;
@@ -15,11 +15,31 @@ public class Sessions {
         this.date = date;
         this.time = time;
     }
-    
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public int getHallId() {
+        return hallId;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Time getTime() {
+        return time;
+    }
 
     @Override
     public String toString() {
-        return "Session{" +
+        return "Sessions{" +
                 "id=" + id +
                 ", hallId=" + hallId +
                 ", movieId=" + movieId +
