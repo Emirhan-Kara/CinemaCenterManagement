@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +18,8 @@ import java.sql.Date;
 
 
 public class DatabaseConnection {
-    private static Connection connection;
+    public static Connection connection;
+    private File selectedFile; // To store the selected file REMINDER CHECK THIS DONT FORGET
 
     // Static block to initialize the connection
     static 
@@ -57,7 +60,7 @@ public class DatabaseConnection {
                 String userRole = rs.getString("user_role");
                 String firstname = rs.getString("firstname");
                 String lastname = rs.getString("lastname");
-                return new Admin(id, username, firstname, lastname, password);
+                return new Employee(id, userRole, username, firstname, lastname, password);
             } else {
                 System.out.println("Invalid username or password.");
                 return null; // Authentication failed
@@ -115,6 +118,18 @@ public class DatabaseConnection {
     *
     */
 
+    public static boolean DeleteEmployee(int id) {
+        String query = "DELETE users WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     public static boolean updateEmployee(Employee employee) {
         String query = "UPDATE users SET user_role = ?, username = ?, firstname = ?, lastname = ?, password = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -135,9 +150,6 @@ public class DatabaseConnection {
             return false;
         }
     }
-
-    
-    
     public static boolean deleteEmployee(int id)
     {
         String query = "DELETE FROM users WHERE id = ?";
@@ -189,8 +201,7 @@ public class DatabaseConnection {
             return false; // Returns false if an exception occurs
         }
     }
-    
-    
+
     /*  
     *
     *
@@ -221,9 +232,10 @@ public class DatabaseConnection {
                 byte[] visuals = rs.getBytes("visuals");
                 double agebased_disc_rate = rs.getDouble("agebased_disc_rate");
                 int sold = rs.getInt("sold");
+                double totalrevenue = rs.getDouble("totalrevenue");
 
                 // Add the product to the list
-                products.add(new Product(id, productName, price, stock, visuals, agebased_disc_rate, sold));
+                products.add(new Product(id, productName, price, stock, visuals, agebased_disc_rate, sold, totalrevenue));
             }
 
         } catch (Exception e) {
@@ -238,7 +250,7 @@ public class DatabaseConnection {
     */
     public static boolean updateProduct(Product product) 
     {
-        String query = "UPDATE products SET product_name = ?, price = ?, stock = ?, agebased_disc_rate = ?, visuals = ?, sold = ?, WHERE id = ?";
+        String query = "UPDATE products SET product_name = ?, price = ?, stock = ?, agebased_disc_rate = ?, visuals = ?, sold = ?, totalrevenue = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             // Set query placeholder parameters
             pstmt.setString(1, product.getProductName());
@@ -246,7 +258,7 @@ public class DatabaseConnection {
             pstmt.setInt(3, product.getStock());
             pstmt.setDouble(4,product.get_agebased_disc_rate_());
             pstmt.setBytes(5, product.getVisuals()); // Binary data for the image
-            pstmt.setInt(6, product.getSold());
+            pstmt.setInt(6, product.getsold());
             pstmt.setInt(7, product.getId());
     
             // Execute update
@@ -262,231 +274,228 @@ public class DatabaseConnection {
     *
     *
     */
-    public static List<Product> calculateRevenueAndTaxes() 
-    {
-        List<Product> products = getProducts(null); // Fetch products from the database
+    /*
+    * MOVIE THINGS
+    */
+    ///////////////////////////////////////////////////
 
-        for (Product product : products) {
-            String productName = product.getProductName();
-            double price = product.getPrice();
-            
-            int sold = product.getSold();
-
-            // Tax rate: 20% for tickets, 10% for others
-            double taxRate = (productName.equalsIgnoreCase("ticket") || productName.equalsIgnoreCase("discountedTicket"))? 0.2 : 0.1;
-            // Calculate revenue
-            product.productsRevenue = sold * (price * (1 + taxRate));
-            // Calculate tax
-            product.taxAmount = sold*price*taxRate;
-        }
-        return products;
-    }
-/*
- * MOVIE THINGS
- */
-///////////////////////////////////////////////////
-
-    public static boolean addMovie(Movie movie) 
-    {
+    public static boolean addMovie(Movie movie) {
         String query = "INSERT INTO Movie (title, genre, poster, summary) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, movie.getTitle());
-            pstmt.setString(2, movie.getGenre());
-            pstmt.setBytes(3, movie.getPoster());
-            pstmt.setString(4, movie.getSummary());
-            return pstmt.executeUpdate() > 0;
+            pstmt.setString(1, movie.title);
+            pstmt.setString(2, movie.genre);
+
+            // Handle the poster (store as LONGBLOB)
+            if (movie.poster != null) {
+                pstmt.setBytes(3, movie.poster); // Use the byte[] poster
+            } else {
+                pstmt.setNull(3, java.sql.Types.BLOB); // Set NULL if no poster is provided
+            }
+
+            pstmt.setString(4, movie.summary);
+
+            return pstmt.executeUpdate() > 0; // Return true if insertion was successful
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false; // Return false in case of an error
         }
     }
-    /*
-     * 
-     * 
-     */
+
     public static boolean updateMovie(Movie movie) {
         String query = "UPDATE Movie SET title = ?, genre = ?, poster = ?, summary = ? WHERE id = ?";
     
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, movie.getTitle());
-            pstmt.setString(2, movie.getGenre());
-            pstmt.setBytes(3, movie.getPoster());
-            pstmt.setString(4, movie.getSummary());
-            pstmt.setInt(5, movie.getId());
-            return pstmt.executeUpdate() > 0;
+            pstmt.setString(1, movie.title);
+            pstmt.setString(2, movie.genre);
+    
+            // Handle the poster (set as a LONGBLOB)
+            if (movie.poster != null) {
+                pstmt.setBytes(3, movie.poster); // Use the byte[] poster
+            } else {
+                pstmt.setNull(3, java.sql.Types.BLOB); // Set NULL if no poster is provided
+            }
+    
+            pstmt.setString(4, movie.summary);
+            pstmt.setInt(5, movie.id); // Specify which movie to update
+    
+            return pstmt.executeUpdate() > 0; // Return true if update was successful
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false; // Return false in case of an error
         }
     }
-    /*
-     * 
-     *
-     */
+    
     public static boolean deleteMovie_byID(int movieId) {
         String query = "DELETE FROM Movie WHERE id = ?";
     
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, movieId);
-            return pstmt.executeUpdate() > 0;
+            pstmt.setInt(1, movieId); // Specify the movie ID to delete
+    
+            return pstmt.executeUpdate() > 0; // Return true if deletion was successful
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false; // Return false in case of an error
         }
     }
-    /*
-     * 
-     * for listing all movies
+    
+        /**
+     * Retrieves all movies from the database, including posters as byte arrays.
+     *
+     * @return A list of Movie objects with posters included.
      */
     public static List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<>();
-        String query = "SELECT * FROM movie";
-    
+        String query = "SELECT * FROM Movie";
+
         try (PreparedStatement pstmt = connection.prepareStatement(query);
-             ResultSet rs = pstmt.executeQuery()) {
-    
+            ResultSet rs = pstmt.executeQuery()) {
+
             while (rs.next()) {
-                Movie movie = new Movie(
+                // Create Movie objects, including the poster as byte[]
+                movies.add(new Movie(
                     rs.getInt("id"),
                     rs.getString("title"),
                     rs.getString("genre"),
-                    rs.getBytes("poster"),
+                    rs.getBytes("poster"), // Poster stored as byte[]
                     rs.getString("summary")
-                );
-                movies.add(movie);
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return movies;
     }
+
+    /**
+ * Retrieves a single movie by its ID, including its poster as a byte array.
+ *
+ * @param movieId The ID of the movie to retrieve.
+ * @return A Movie object with the poster included, or null if not found.
+ */
+public static Movie getMovie_byID(int movieId) {
+    String query = "SELECT * FROM Movie WHERE id = ?";
+
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setInt(1, movieId);
+
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                // Return a Movie object with all its fields, including the poster
+                return new Movie(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("genre"),
+                    rs.getBytes("poster"), // Poster stored as byte[]
+                    rs.getString("summary")
+                );
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null; // Return null if no movie is found
+}
+
+
     /*
-     * 
-     * To list a specific movie
-     */
-    public static Movie getMovie_byID(int movieId) {
-        String query = "SELECT * FROM movie WHERE id = ?";
-    
+    * Get movies by selected genre, including genre and summary.
+    */
+    public static List<Movie> SearchBy_Genre(String genre) {
+        List<Movie> movies = new ArrayList<>();
+        String query = "SELECT id, title, genre, poster, summary FROM movie WHERE genre LIKE ?";
+
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, movieId);
-    
+            pstmt.setString(1, "%" + genre + "%"); // Use wildcards for partial matches
+
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Movie(
+                while (rs.next()) {
+                    movies.add(new Movie(
                         rs.getInt("id"),
                         rs.getString("title"),
                         rs.getString("genre"),
                         rs.getBytes("poster"),
                         rs.getString("summary")
-                    );
+                    ));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
-        return null; // Return null if no movie is found or an error occurs
-    }
-    /*
-     * CASHIER GUY WILL USE THESE
-     * get movies by selected genre
-     */
-    public static List<Movie> SearchBy_Genre(String genre) {
-        List<Movie> movies = new ArrayList<>();
-        String query = "SELECT id, title, poster FROM movie WHERE genre LIKE ?";
-    
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, "%" + genre + "%"); // Use wildcards for partial matches
-    
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Movie movie = new Movie(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        null, // Genre not needed for display
-                        rs.getBytes("poster"),
-                        null // Summary not needed for display
-                    );
-                    movies.add(movie);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    
+
         return movies;
     }
+
     /*
-     * 
-     * Partially search, unknown title
-     */
+    * Search movies by partial title, including genre and summary.
+    */
     public static List<Movie> SearchBy_Title(String partialTitle) {
         List<Movie> movies = new ArrayList<>();
-        String query = "SELECT id, title, poster FROM movie WHERE title LIKE ?";
-    
+        String query = "SELECT id, title, genre, poster, summary FROM movie WHERE title LIKE ?";
+
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, "%" + partialTitle + "%"); // thanks to wilcards
-    
+            pstmt.setString(1, "%" + partialTitle + "%"); // Use wildcards for partial matches
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Movie movie = new Movie(
+                    movies.add(new Movie(
                         rs.getInt("id"),
                         rs.getString("title"),
-                        null, // Genre not needed for display
+                        rs.getString("genre"),
                         rs.getBytes("poster"),
-                        null // Summary not needed for display
-                    );
-                    movies.add(movie);
+                        rs.getString("summary")
+                    ));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
+
         return movies;
     }
+
     /*
-     * 
-     * to shorten and simplify the code genre non-genre full title partial title
-     */
+    * Search movies by title and genre, including genre and summary.
+    */
     public static List<Movie> searchBy_title_genre(String inputTitle, String genre) {
         List<Movie> movies = new ArrayList<>();
-    
+
         // Base query
-        String query = "SELECT id, title, poster FROM movie WHERE title LIKE ?";
-    
+        String query = "SELECT id, title, genre, poster, summary FROM movie WHERE title LIKE ?";
+
         // Add genre filter if provided
         if (genre != null && !genre.trim().isEmpty()) {
-            query += " AND genre = ?";
+            query += " AND genre LIKE ?";
         }
-    
+
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, "%" + inputTitle + "%"); // Partial match for title
-    
+
             // Set genre parameter if provided
             if (genre != null && !genre.trim().isEmpty()) {
-                pstmt.setString(2, genre);
+                pstmt.setString(2, "%" + genre + "%");
             }
-    
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Movie movie = new Movie(
+                    movies.add(new Movie(
                         rs.getInt("id"),
                         rs.getString("title"),
-                        null, // Genre not needed for display
+                        rs.getString("genre"),
                         rs.getBytes("poster"),
-                        null // Summary not needed for display
-                    );
-                    movies.add(movie);
+                        rs.getString("summary")
+                    ));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
+
         return movies;
     }
+
     /*
      *
      *
@@ -496,6 +505,44 @@ public class DatabaseConnection {
      * Bill issues
      * 
      */
+    public static void updateSeatInHall(int hallId, int sessionId, int seatNumber, int seatValue) {
+        String hall = (hallId == 1 ? "HallA" : "HallB");
+        String query = "UPDATE " + hall + " SET seat" + seatNumber + " = ? WHERE session_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, seatValue);
+            pstmt.setInt(2, sessionId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void incrementBookedSeats(int hallId, int sessionId, int quantity) {
+        String hall = (hallId == 1 ? "HallA" : "HallB");
+        String query = "UPDATE " + hall + " SET numberOfBooked = numberOfBooked + ? WHERE session_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, quantity);
+            pstmt.setInt(2, sessionId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static double getProductPrice(int productId) {
+        String query = "SELECT price FROM products WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, productId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+    
+    
+    /*
     public static boolean saveBillToDB(Bill bill) { ///updates stocks
         String insertBillQuery = "INSERT INTO bills (total_price) VALUES (?)";
         String insertBillProductsQuery = "INSERT INTO bill_products (bill_id, product_id, quantity) VALUES (?, ?, ?)";
@@ -527,8 +574,8 @@ public class DatabaseConnection {
             e.printStackTrace();
             return false;
         }
-    }
-    
+    }*/
+    /* 
     ////////////////
     public static Bill getBillById(int billId) {
         Bill bill = new Bill(billId);
@@ -562,29 +609,17 @@ public class DatabaseConnection {
     
         return bill;
     }
-    /**
-     * 
-     */
-    public static double getProductPrice(int productId) {
-        String query = "SELECT price FROM products WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, productId); // Set product ID in the query
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getDouble("price"); // Return the price column value
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0.0; // Return 0.0 if the price is not found
-    }
+    */
     
     public static boolean updateProductStockAndSales_DB(int productId, int quantity) {
-        String query = "UPDATE products SET stock = stock - ?, sold = sold + ? WHERE id = ?";
+        double price = getProductPrice(productId);
+        double fluctuation = price*quantity;
+        String query = "UPDATE products SET stock = stock - ?, sold = sold + ?, totalrevenue = totalrevenue + ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, quantity); // Reduce stock
             pstmt.setInt(2, quantity); // Increase sold count
-            pstmt.setInt(3, productId); // Product ID
+            pstmt.setDouble(3, fluctuation); 
+            pstmt.setInt(4, productId); // Product ID
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0; // Return true if successful
         } catch (SQLException e) {
@@ -648,33 +683,205 @@ public class DatabaseConnection {
     
         return seat01;
     }
-    ////////////////////marking seat as full
-    /// 
-    public static boolean buySeats_updateDB(int sessionId, int hallId, List<Integer> selectedSeats) {
-        String hallTable = (hallId == 1) ? "HallA" : "HallB"; // Determine the hall table
-        StringBuilder query = new StringBuilder("UPDATE " + hallTable + " SET ");
-    
-        // Create SET clause dynamically based on selected seats
-        for (int i = 0; i < selectedSeats.size(); i++) {
-            query.append("seat").append(selectedSeats.get(i)).append(" = 1"); // Mark seat as full (1)
-            if (i < selectedSeats.size() - 1) {
-                query.append(", "); // Add commas for multiple seats
+    /*
+     * 
+     * 
+     * SESSION ISSUES
+     */
+    /**
+     * Adds a new session to the database after ensuring no conflicts.
+     *
+     * @param session The Sessions object containing the session details.
+     * @return True if the session is added, false otherwise.
+     */
+    public static boolean addSession(Sessions session) {
+        // Check if a session with the same hallId, date, and time already exists
+        String checkQuery = "SELECT COUNT(*) FROM sessions WHERE hall_id = ? AND date = ? AND time = ?";
+        String insertQuery = "INSERT INTO sessions (hall_id, movie_id, date, time) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
+            PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+
+            // Set parameters for the check query
+            checkStmt.setInt(1, session.getHallId());
+            checkStmt.setDate(2, session.getDate());
+            checkStmt.setTime(3, session.getTime());
+
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                // Session already exists
+                System.out.println("Conflict: A session already exists with the same hall, date, and time.");
+                return false;
             }
-        }
-        query.append(" WHERE sessionID = ?");
-    
-        try (PreparedStatement pstmt = connection.prepareStatement(query.toString())) {
-            pstmt.setInt(1, sessionId); // Set the sessionId to update for the correct session
-            int rowsUpdated = pstmt.executeUpdate(); // Execute the update query
-    
-            // If rowsUpdated is greater than 0, the update was successful
-            return rowsUpdated > 0;
+
+            // No conflict, proceed to insert the session
+            insertStmt.setInt(1, session.getHallId());
+            insertStmt.setInt(2, session.getMovieId());
+            insertStmt.setDate(3, session.getDate());
+            insertStmt.setTime(4, session.getTime());
+
+            int rowsAffected = insertStmt.executeUpdate();
+            return rowsAffected > 0; // Return true if insertion is successful
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false; // Return false in case of an exception
         }
-    
-        return false; // If update fails
     }
+
+    /**
+     * Deletes a session from the database and related hall table after checking conditions:
+     * - If seats are booked, the session cannot be deleted unless the date has passed.
+     * - Removes the session from both the `sessions` table and the related hall table.
+     *
+     * @param sessionId The ID of the session to be deleted.
+     * @param hallId    The ID of the hall associated with the session.
+     * @return True if the session is deleted successfully, false otherwise.
+     */
+    public static boolean deleteSession(int sessionId, int hallId) {
+        // Determine the hall table name based on the hall ID
+        String hallTableName = hallId == 1 ? "HallA" : hallId == 2 ? "HallB" : null;
+
+        if (hallTableName == null) {
+            System.out.println("Invalid hall ID.");
+            return false;
+        }
+
+        // Queries
+        String checkSessionQuery = "SELECT date FROM sessions WHERE id = ?";
+        String checkSeatsQuery = "SELECT numberOfbooked FROM " + hallTableName + " WHERE sessionID = ?";
+        String deleteFromHall = "DELETE FROM " + hallTableName + " WHERE sessionID = ?";
+        String deleteFromSessions = "DELETE FROM sessions WHERE id = ?";
+
+        try (PreparedStatement checkSessionStmt = connection.prepareStatement(checkSessionQuery);
+            PreparedStatement checkSeatsStmt = connection.prepareStatement(checkSeatsQuery);
+            PreparedStatement deleteHallStmt = connection.prepareStatement(deleteFromHall);
+            PreparedStatement deleteSessionStmt = connection.prepareStatement(deleteFromSessions)) {
+
+            // Step 1: Check if the session exists and retrieve the date
+            checkSessionStmt.setInt(1, sessionId);
+            ResultSet sessionRs = checkSessionStmt.executeQuery();
+
+            if (!sessionRs.next()) {
+                System.out.println("Session not found in the sessions table.");
+                return false;
+            }
+
+            Date sessionDate = sessionRs.getDate("date");
+            Date currentDate = new Date(System.currentTimeMillis());
+
+            // Step 2: Check if any seats are booked for the session
+            checkSeatsStmt.setInt(1, sessionId);
+            ResultSet seatsRs = checkSeatsStmt.executeQuery();
+
+            if (seatsRs.next()) {
+                int numberOfBookedSeats = seatsRs.getInt("numberOfbooked");
+
+                // If seats are booked and the session date has not passed, disallow deletion
+                if (numberOfBookedSeats > 0 && sessionDate.after(currentDate)) {
+                    System.out.println("Cannot delete session: Seats are booked and the session date has not passed.");
+                    return false;
+                }
+            }
+
+            // Step 3: Delete the session from the hall table
+            deleteHallStmt.setInt(1, sessionId);
+            deleteHallStmt.executeUpdate();
+
+            // Step 4: Delete the session from the `sessions` table
+            deleteSessionStmt.setInt(1, sessionId);
+            int rowsAffected = deleteSessionStmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Session deleted successfully.");
+                return true;
+            } else {
+                System.out.println("Failed to delete session from the sessions table.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+/**
+ * Updates a session in the database after ensuring there are no conflicts.
+ * Ensures related hall tables are updated if the hall changes.
+ *
+ * @param oldSession The existing session details.
+ * @param newSession The new session details.
+ * @return True if the session is updated successfully, false otherwise.
+ */
+public static boolean updateSession(Sessions oldSession, Sessions newSession) {
+    // Determine old and new hall table names
+    String oldHallTableName = oldSession.getHallId() == 1 ? "HallA" : oldSession.getHallId() == 2 ? "HallB" : null;
+    String newHallTableName = newSession.getHallId() == 1 ? "HallA" : newSession.getHallId() == 2 ? "HallB" : null;
+
+    if (oldHallTableName == null || newHallTableName == null) {
+        System.out.println("Invalid hall ID(s).");
+        return false;
+    }
+
+    // Query to check for conflicts
+    String conflictCheckQuery = "SELECT COUNT(*) FROM sessions WHERE hall_id = ? AND date = ? AND time = ? AND id != ?";
+    String deleteFromOldHall = "DELETE FROM " + oldHallTableName + " WHERE sessionID = ?";
+    String insertIntoNewHall = "INSERT INTO " + newHallTableName + " (sessionID, numberOfbooked) VALUES (?, 0)";
+    String updateSessionQuery = "UPDATE sessions SET hall_id = ?, movie_id = ?, date = ?, time = ? WHERE id = ?";
+
+    try (PreparedStatement conflictCheckStmt = connection.prepareStatement(conflictCheckQuery);
+         PreparedStatement deleteStmt = connection.prepareStatement(deleteFromOldHall);
+         PreparedStatement insertStmt = connection.prepareStatement(insertIntoNewHall);
+         PreparedStatement updateStmt = connection.prepareStatement(updateSessionQuery)) {
+
+        // Step 1: Check for conflicts with the new session details
+        conflictCheckStmt.setInt(1, newSession.getHallId());
+        conflictCheckStmt.setDate(2, newSession.getDate());
+        conflictCheckStmt.setTime(3, newSession.getTime());
+        conflictCheckStmt.setInt(4, newSession.getId());
+
+        ResultSet rs = conflictCheckStmt.executeQuery();
+        if (rs.next() && rs.getInt(1) > 0) {
+            System.out.println("Conflict: A session already exists with the same hall, date, and time.");
+            return false;
+        }
+
+        // Step 2: If the hall is being changed, update hall tables
+        if (newSession.getHallId() != oldSession.getHallId()) {
+            // Delete the session from the old hall table
+            deleteStmt.setInt(1, oldSession.getId());
+            deleteStmt.executeUpdate();
+
+            // Insert the session into the new hall table
+            insertStmt.setInt(1, newSession.getId());
+            insertStmt.executeUpdate();
+        }
+
+        // Step 3: Update the session details in the `sessions` table
+        updateStmt.setInt(1, newSession.getHallId());
+        updateStmt.setInt(2, newSession.getMovieId());
+        updateStmt.setDate(3, newSession.getDate());
+        updateStmt.setTime(4, newSession.getTime());
+        updateStmt.setInt(5, newSession.getId());
+
+        int rowsAffected = updateStmt.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println("Session updated successfully.");
+            return true;
+        } else {
+            System.out.println("Failed to update session.");
+            return false;
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+    
     
     
     
