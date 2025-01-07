@@ -10,9 +10,10 @@ public class Product {
     private byte[] visuals;     // BLOB (PNG stored as byte[])
     private double agebased_disc_rate;
     private int sold;
-
+    public double totalrevenue;
     public double productsRevenue;
-    public double taxAmount;
+    public double taxrate;
+    public double total_taxAmount; 
 
 
     //////////////////////////////////////////////
@@ -20,7 +21,7 @@ public class Product {
 
 
     // Constructor
-    public Product(int id, String productName, double price, int stock, byte[] visuals, double agebased_disc_rate, int sold) {
+    public Product(int id, String productName, double price, int stock, byte[] visuals, double agebased_disc_rate, int sold, double totalrevenue) {
         this.id = id;
         this.productName = productName;
         this.price = price;
@@ -28,10 +29,21 @@ public class Product {
         this.visuals = visuals;
         this.agebased_disc_rate = agebased_disc_rate;
         this.sold = sold;
+        this.totalrevenue = totalrevenue;
+        this.taxrate = (id == 1 || id == 5 ? 0.2 : 0.1);
+        this.total_taxAmount = totalrevenue*taxrate;
     }
 
 
     // Getters and setters for new fields
+    public double gettotalrevenue() {
+        return totalrevenue;
+    }
+
+    public void settotalrevenue(double totalrevenue) {
+        this.totalrevenue = totalrevenue;
+    }
+
     public double get_agebased_disc_rate_() {
         return agebased_disc_rate;
     }
@@ -40,11 +52,11 @@ public class Product {
         this.agebased_disc_rate = agebased_disc_rate;
     }
 
-    public void sold_amount(int amount)
+    public void setsold(int amount)
     {
         this.sold += amount;
     }
-    public int getSold()
+    public int getsold()
     {
         return sold;
     }
@@ -71,7 +83,6 @@ public class Product {
     }
 
     public void setPrice(double price) {
-        
         this.price = price - (price * agebased_disc_rate);
     }
 
