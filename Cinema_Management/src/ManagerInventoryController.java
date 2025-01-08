@@ -84,8 +84,8 @@ public class ManagerInventoryController {
     private void updatePriceLabels()
     {
         // Get the stocks from database
-        int beverageStockDB = allProducts.get(1).getStock();
-        int foodStockDB = allProducts.get(2).getStock();
+        int foodStockDB = allProducts.get(1).getStock();
+        int beverageStockDB = allProducts.get(2).getStock();
         int toyStockDB = allProducts.get(3).getStock();
 
         // put them to the reletad text labels on the screen 
