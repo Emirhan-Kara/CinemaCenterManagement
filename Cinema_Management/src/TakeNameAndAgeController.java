@@ -93,18 +93,21 @@ public class TakeNameAndAgeController {
             if (age < 1 || age > 110)
             {
                 errorText.setText("Enter a valid age");
+                ageField.clear();
                 return;
             }
         }
         catch (NumberFormatException e)
         {
             errorText.setText("Age must be a number");
+            ageField.clear();
             return;
         }
 
-        if (age < 0 || age > 110)
+        if (!this.name.matches("[a-zA-ZçÇğĞıİöÖşŞüÜ]+"))
         {
-            errorText.setText("Enter valid age");
+            errorText.setText("Name must contain only letters.");
+            nameField.clear();
             return;
         }
 
