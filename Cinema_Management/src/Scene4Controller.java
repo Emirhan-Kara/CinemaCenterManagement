@@ -103,25 +103,24 @@ public class Scene4Controller extends CashierProperties
     }
 
 
-    @FXML
-    void buyClicked(MouseEvent event) 
-    {
-
-    }
-
-
-
     private int curBeverageNum = 0;
     private int curFoodNum = 0;
     private int curToyNum = 0;
 
     private double totalProductPrice = 0;
-    private double productTax = 0;
+    private double totalProductTax = 0;
     private double finalPrice = 0;
 
-    private final double curBeveragePrice = CashierProperties.currentProductPrices.get(2).getPrice();
+    
     private final double curFoodPrice = CashierProperties.currentProductPrices.get(1).getPrice();
+    private final double curBeveragePrice = CashierProperties.currentProductPrices.get(2).getPrice();
     private final double curToyPrice = CashierProperties.currentProductPrices.get(3).getPrice();
+
+    // dont let them exceed the stocks
+    private final int stockFood = CashierProperties.currentProductPrices.get(1).getStock();
+    private final int stockBeverage = CashierProperties.currentProductPrices.get(2).getStock();
+    private final int stockToy = CashierProperties.currentProductPrices.get(3).getStock();
+
     private final double productTaxRate = 0.1;
 
     // önceki sceneden ticket için olan fiyatları alıp koy
@@ -148,15 +147,15 @@ public class Scene4Controller extends CashierProperties
         selectedToyLabel.setText(String.valueOf(curToyNum));
 
         productPriceLabel.setText(String.valueOf(totalProductPrice) + " ₺");
-        productTaxLabel.setText(String.valueOf(productTax) + " ₺");
+        productTaxLabel.setText(String.valueOf(totalProductTax) + " ₺");
         finalPriceLabel.setText(String.valueOf(finalPrice) + " ₺");
     }
 
     private void updateTotalProductPriceAndTax()
     {
         totalProductPrice = (curBeverageNum*curBeveragePrice) + (curFoodNum*curFoodPrice) + (curToyNum*curToyPrice);
-        productTax = totalProductPrice*productTaxRate;
-        finalPrice = ticketPrice + ticketTax + totalProductPrice + productTax;
+        totalProductTax = totalProductPrice*productTaxRate;
+        finalPrice = ticketPrice + ticketTax + totalProductPrice + totalProductTax;
         updateAllLabels();
     }
 
@@ -190,7 +189,7 @@ public class Scene4Controller extends CashierProperties
     @FXML
     void plusBeverage(MouseEvent event)
     {
-        if (!event.getButton().equals(MouseButton.PRIMARY))
+        if (!event.getButton().equals(MouseButton.PRIMARY) ||curBeverageNum >= stockBeverage)
             return;
         curBeverageNum++;
         updateTotalProductPriceAndTax();
@@ -199,7 +198,7 @@ public class Scene4Controller extends CashierProperties
     @FXML
     void plusFood(MouseEvent event)
     {
-        if (!event.getButton().equals(MouseButton.PRIMARY))
+        if (!event.getButton().equals(MouseButton.PRIMARY) || curFoodNum >= stockFood)
             return;
         curFoodNum++;
         updateTotalProductPriceAndTax();
@@ -208,10 +207,23 @@ public class Scene4Controller extends CashierProperties
     @FXML
     void plusToy(MouseEvent event)
     {
-        if (!event.getButton().equals(MouseButton.PRIMARY))
+        if (!event.getButton().equals(MouseButton.PRIMARY) || curToyNum >= stockToy)
             return;
         curToyNum++;
         updateTotalProductPriceAndTax();
     }
 
+
+    @FXML
+    void buyClicked(MouseEvent event) 
+    {
+        CashierProperties.soldBeverageNum = this.curBeverageNum;
+        CashierProperties.soldFoodNum = this.curFoodNum;
+        CashierProperties.soldToyNum = this.curToyNum;
+
+        CashierProperties.totalProductPrice = this.totalProductPrice;
+        CashierProperties.totalProductTax = this.totalProductTax;
+
+        CashierProperties.createBillForScene5();
+    }
 }
