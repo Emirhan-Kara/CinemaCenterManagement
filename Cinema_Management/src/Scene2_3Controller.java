@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +74,13 @@ public class Scene2_3Controller extends CashierProperties
     /////////////////////////////
     
     @FXML
-    private Label totalPriceLabel;
+    private Label ticketPriceLabel;
+
+    @FXML
+    private Label taxLabel;
+
+    @FXML
+    private Label finalPriceLabel;
 
     @FXML
     private Button buyButton;
@@ -104,26 +112,31 @@ public class Scene2_3Controller extends CashierProperties
 
     //////////////////////
     protected List<Sessions> listedSessions;
+    protected Sessions selectedSession;
 
     @FXML
     void initialize()
     {
         // get the information from CashierProperties
+        selectedSession = CashierProperties.selectedSession;
+        currentTotalPrice = CashierProperties.totalTicketPrice;
+        currentTotalTax = CashierProperties.totalTicketTax;
         normalMap = CashierProperties.normalTicketMap;
         discountedMap = CashierProperties.discountedTicketMap;
 
+        // Fetch sessions
+        listedSessions = CashierProperties.listedSessionsAtScene2;
 
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(CashierProperties.selectMovie.poster);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(CashierProperties.selectedMovie.poster);
         Image image = new Image(inputStream);
         this.moviePoster.setImage(image);
 
-        totalPriceLabel.setText("0 ₺");
+        // set the initial prices, which are 0
+        updatePriceAndTaxLabel(0);
 
         nameSurnameLabel.setText(LoginController.loggedEmployee.getFirstname() + " " + LoginController.loggedEmployee.getLastname());
         roleLabel.setText(LoginController.loggedEmployee.getUserRole());
 
-        // Fetch sessions
-        listedSessions = DatabaseConnection.getSessionsOfMovie(CashierProperties.selectMovie.id);
 
         // Set up the TableView columns
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));   // Maps to getDate()
@@ -132,25 +145,50 @@ public class Scene2_3Controller extends CashierProperties
 
         sessionTable.setItems(FXCollections.observableArrayList(listedSessions));
 
+        // if there is already a selection, select it from the table 
+        // indicating the scenario where the user pressed back button in the next scene
+        // (after selecting the session, user pressed next. But in the aditional product buying scene, user pressed back)
+        if (selectedSession != null)
+        {
+            if(!sessionTable.getItems().contains(selectedSession))
+                System.out.println("tabloda session yok");
+            sessionTable.getSelectionModel().select(selectedSession);
+            openSeatScreen(selectedSession);
+
+            // Optionally, simulate a mouse click event on the selected row
+            int index = sessionTable.getItems().indexOf(selectedSession);
+            if (index != -1)
+            {
+                sessionTable.getFocusModel().focus(index); // Focus the item
+                sessionTable.getSelectionModel().clearAndSelect(index); // Select the item
+                // Request focus on the TableView to ensure the selection is visible
+                sessionTable.requestFocus();
+            }
+        }
+
         // Bind the seats image with the: .visibleProperty().bind(sessionTable.getSelectionModel().selectedItemProperty().isNotNull());
         // Add listener to handle row selection
-        sessionTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                // Make buySceneGrid visible
-                buySceneGrid.setVisible(true);
-
-                // remove the seats of the previous selection
-                seatGrid.getChildren().clear();
-
-                // Display seats for the selected session
-                int[] seatAvailability = DatabaseConnection.Seat_Availability_Array(newValue.getId(), newValue.getHallId());
-                displaySeats(seatAvailability, newValue.getHallId());
-            } else {
+        sessionTable.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+            if (newValue != null)
+                openSeatScreen(newValue);
+            else
                 buySceneGrid.setVisible(false);
-            }
         });
     }
+    private void openSeatScreen(Sessions selection)
+    {
+        selectedSession = selection;
 
+        // Make buySceneGrid visible
+        buySceneGrid.setVisible(true);
+
+        // remove the seats of the previous selection
+        seatGrid.getChildren().clear();
+
+        // Display seats for the selected session
+        int[] seatAvailability = DatabaseConnection.Seat_Availability_Array(selection.getId(), selection.getHallId());
+        displaySeats(seatAvailability, selection.getHallId());
+    }
 
     private int seatIndex;
     private void displaySeats(int[] seatAvailability, int hallId)
@@ -164,13 +202,14 @@ public class Scene2_3Controller extends CashierProperties
         {
             for (int j = 0; j < cols; j++)
             {
-                addButtonToGrid(i, j, seatIndex, seatAvailability[seatIndex]);
+                boolean isBooked = selectedSeats.contains(seatIndex+1);
+                addButtonToGrid(i, j, seatIndex, seatAvailability[seatIndex], isBooked);
                 seatIndex++;
             }
         }
     }
 
-    public void addButtonToGrid(int row, int column, int seatIDX, int isAvailable)
+    public void addButtonToGrid(int row, int column, int seatIDX, int isAvailable, boolean isBookedPreviously )
     {
         // Calculate the button text as row + column + 1
         String buttonText = String.valueOf(seatIDX + 1);
@@ -187,18 +226,24 @@ public class Scene2_3Controller extends CashierProperties
         seatGrid.add(button, column, row);
 
         // Set style based on availability
-        if (isAvailable == 0) {
+        if (isBookedPreviously)
+        {
+            button.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-font-size: 12;"); // Booked at real-time but at the previous page
+            button.setOnAction(event -> selectSeat(seatIDX + 1, button)); // Update selected seats
+        }
+        else if (isAvailable == 0)
+        {
             button.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 12;"); // Available
             button.setOnAction(event -> selectSeat(seatIDX + 1, button)); // Update selected seats
         }
         else
         {
-            button.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 12;"); // Booked
+            button.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 12;"); // Booked at database 
             button.setDisable(true); // Disable booked seats
         }
     }
 
-    private ArrayList<Integer> selectedSeats = new ArrayList<>();
+    private ArrayList<Integer> selectedSeats = CashierProperties.selectedSeatsAtScene2;
 
     // maps: key->seat number   -   value->customer name
     private Map<Integer, String> normalMap;
@@ -206,7 +251,7 @@ public class Scene2_3Controller extends CashierProperties
 
     private double currentDiscountedTicketPrice = CashierProperties.currentProductPrices.get(4).getPrice();
     private double currentNormalTicketPrice = CashierProperties.currentProductPrices.get(0).getPrice();
-    private double currentTotalPrice = 0;
+    
     public void selectSeat(int seatId, Button seatButton)
     {
         // Check if the seat is already selected
@@ -221,8 +266,7 @@ public class Scene2_3Controller extends CashierProperties
                 System.out.println("Removed from discounted map: Seat " + seatId);
 
                 // update the total price label 
-                currentTotalPrice -= currentDiscountedTicketPrice;
-                totalPriceLabel.setText(currentTotalPrice + " ₺");
+                updatePriceAndTaxLabel(-currentDiscountedTicketPrice);
             }
             else if (normalMap.containsKey(seatId))
             {
@@ -230,8 +274,7 @@ public class Scene2_3Controller extends CashierProperties
                 System.out.println("Removed from normal map: Seat " + seatId);
 
                 // update the total price label
-                currentTotalPrice -= currentNormalTicketPrice;
-                totalPriceLabel.setText(currentTotalPrice + " ₺");
+                updatePriceAndTaxLabel(-currentNormalTicketPrice);
             }
 
             // Reset the button color to green (available)
@@ -269,8 +312,7 @@ public class Scene2_3Controller extends CashierProperties
                     // update the discounted sale map
                     discountedMap.put(seatId, name);
                     
-                    currentTotalPrice += currentDiscountedTicketPrice;
-                    totalPriceLabel.setText(currentTotalPrice + " ₺");
+                    updatePriceAndTaxLabel(currentDiscountedTicketPrice);
                 }
                 else
                 {
@@ -280,8 +322,7 @@ public class Scene2_3Controller extends CashierProperties
                     normalMap.put(seatId, name);
 
                     // update the total price label
-                    currentTotalPrice += currentNormalTicketPrice;
-                    totalPriceLabel.setText(currentTotalPrice + " ₺");
+                    updatePriceAndTaxLabel(currentNormalTicketPrice);
                 }
 
                 // Save the seatId to selectedSeats
@@ -297,11 +338,41 @@ public class Scene2_3Controller extends CashierProperties
         }
     }
 
+    private double currentTotalPrice = 0;
+    private double currentTotalTax = 0;
+    private double currentFinalPrice = 0;
+    private void updatePriceAndTaxLabel(double val)
+    {
+        // update the current ticket price
+        currentTotalPrice += val;
+
+        // update the tax
+        currentTotalTax = (Math.round(currentTotalPrice*100.0) / 100.0 )* 0.2;
+
+        currentFinalPrice = currentTotalPrice + currentTotalTax;
+
+        if (currentFinalPrice != 0.0)
+            buyButton.setDisable(false); // Enables the button
+        else
+            buyButton.setDisable(true); // Disable the button
+
+
+
+        // change the labels
+        ticketPriceLabel.setText(currentTotalPrice + " ₺");
+        taxLabel.setText(currentTotalTax + " ₺");
+        finalPriceLabel.setText(currentFinalPrice + " ₺");
+    }
+
     @FXML
     public void buyClicked() throws Exception
     {
+        CashierProperties.selectedSession = selectedSession;
+
+        CashierProperties.selectedSeatsAtScene2 = selectedSeats;
+
         CashierProperties.totalTicketPrice = currentTotalPrice;
-        CashierProperties.totalTicketTax = Math.round(currentTotalPrice*0.2);
+        CashierProperties.totalTicketTax = currentTotalTax;
 
         CashierProperties.normalTicketMap = normalMap;
         CashierProperties.discountedTicketMap = discountedMap;
