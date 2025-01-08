@@ -109,16 +109,16 @@ public class ManagerProductController {
         double ticketPriceDB = allProducts.get(0).getPrice();
         ticketPrice.setText(String.format("%.2f", ticketPriceDB) + " ₺");
 
-        double beveragePriceDB = allProducts.get(1).getPrice();
-        beveragePrice.setText(String.format("%.2f", beveragePriceDB) + " ₺");
-
-        double foodPricePriceDB = allProducts.get(2).getPrice();
+        double foodPricePriceDB = allProducts.get(1).getPrice();
         foodPrice.setText(String.format("%.2f", foodPricePriceDB) + " ₺");
+
+        double beveragePriceDB = allProducts.get(2).getPrice();
+        beveragePrice.setText(String.format("%.2f", beveragePriceDB) + " ₺");
 
         double toyPriceDB = allProducts.get(3).getPrice();
         toyPrice.setText(String.format("%.2f", toyPriceDB) + " ₺");
 
-        double discountRateDB = allProducts.get(0).get_agebased_disc_rate_(); // it is between 0 and 1
+        double discountRateDB = allProducts.get(4).get_agebased_disc_rate_(); // it is between 0 and 1
         // normalize it, between
         int normalizedDiscountRate = (int)(discountRateDB * 100);
         discountRate.setText("% " + String.valueOf(normalizedDiscountRate));
@@ -197,14 +197,14 @@ public class ManagerProductController {
     @FXML
     void beverageClicked(MouseEvent event)
     {
-        updateSelectedProduct(beverageSlider, 1);
+        updateSelectedProduct(beverageSlider, 2);
     }
 
 
     @FXML
     void foodClicked(MouseEvent event)
     {
-        updateSelectedProduct(foodSlider, 2);
+        updateSelectedProduct(foodSlider, 1);
     }
 
     @FXML
@@ -223,10 +223,10 @@ public class ManagerProductController {
         // normalize it to become between 0-1
         double discountVal = normalizedDiscountVal / 100.0;
 
-        allProducts.get(0).set_agebased_disc_rate(discountVal);
-
+        allProducts.get(4).set_agebased_disc_rate(discountVal);
+        allProducts.get(4).setPrice(allProducts.get(0).getPrice());
         // update the database
-        DatabaseConnection.updateProduct(allProducts.get(0));
+        DatabaseConnection.updateProduct(allProducts.get(4));
 
         // update the prices with the values from database
         updateLabels();
