@@ -259,7 +259,8 @@ public class DatabaseConnection {
             pstmt.setDouble(4,product.get_agebased_disc_rate_());
             pstmt.setBytes(5, product.getVisuals()); // Binary data for the image
             pstmt.setInt(6, product.getsold());
-            pstmt.setInt(7, product.getId());
+            pstmt.setDouble(7, product.gettotalrevenue());
+            pstmt.setInt(8, product.getId());
     
             // Execute update
             int rowsAffected = pstmt.executeUpdate();
@@ -507,7 +508,7 @@ public static Movie getMovie_byID(int movieId) {
      */
     public static void updateSeatInHall(int hallId, int sessionId, int seatNumber, int seatValue) {
         String hall = (hallId == 1 ? "HallA" : "HallB");
-        String query = "UPDATE " + hall + " SET seat" + seatNumber + " = ? WHERE session_id = ?";
+        String query = "UPDATE " + hall + " SET seat" + seatNumber + " = ? WHERE sessionID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, seatValue);
             pstmt.setInt(2, sessionId);
@@ -518,7 +519,7 @@ public static Movie getMovie_byID(int movieId) {
     }
     public static void incrementBookedSeats(int hallId, int sessionId, int quantity) {
         String hall = (hallId == 1 ? "HallA" : "HallB");
-        String query = "UPDATE " + hall + " SET numberOfBooked = numberOfBooked + ? WHERE session_id = ?";
+        String query = "UPDATE " + hall + " SET numberOfBooked = numberOfBooked + ? WHERE sessionID = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, quantity);
             pstmt.setInt(2, sessionId);
