@@ -19,7 +19,6 @@ import java.sql.Date;
 
 public class DatabaseConnection {
     public static Connection connection;
-    private File selectedFile; // To store the selected file REMINDER CHECK THIS DONT FORGET
 
     // Static block to initialize the connection
     static 
@@ -543,6 +542,7 @@ public static Movie getMovie_byID(int movieId) {
     }
     
     
+    
     /*
     public static boolean saveBillToDB(Bill bill) { ///updates stocks
         String insertBillQuery = "INSERT INTO bills (total_price) VALUES (?)";
@@ -611,7 +611,7 @@ public static Movie getMovie_byID(int movieId) {
         return bill;
     }
     */
-    
+
     public static boolean updateProductStockAndSales_DB(int productId, int quantity) {
         double price = getProductPrice(productId);
         double fluctuation = price*quantity;
@@ -628,9 +628,326 @@ public static Movie getMovie_byID(int movieId) {
             return false;
         }
     }
+
+    /**
+     * Saves the HTML content to the database for the specified bill ID.
+     *
+     * @param billId      The ID of the bill.
+     * @param htmlContent The HTML content as a string.
+     */
+    // 🟡🔺 NEWNEW run and check
+    public static void saveHTMLToDB(int billId, String htmlContent) {
+        String query = "UPDATE bills SET htmlReceipt = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, htmlContent); // Store HTML as a string
+            pstmt.setInt(2, billId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Pulls the HTML receipt from the db, parses it, and returns a map containing:
+     * - billId Int (the ID of the bill)
+     * - totalPrice Double (the total price of the bill)
+     * - hallID Int (the Hall ID of the bill)
+     * - sessionID Int (the Session ID of the bill)
+     * - productQuantities Map<Integer, Integer> (Product ID -> Quantity)
+     * - productPrices Map<Integer, Double> (Product ID -> Price per Unit)
+     * - discountedTicketCustomers Map<Integer, String> (Seat Number -> Customer Name)
+     * - normalTicketCustomers Map<Integer, String> (Seat Number -> Customer Name)
+     *
+     * @param billId The ID of the wanted bill .
+     * @return A map containing all the information about receipt
+     */
+    public static Map<String, Object> getReceiptfrDB(int billId) {
+        String query = "SELECT file_data FROM bills WHERE id = ?";
+        Map<Integer, Integer> productQuantities = new HashMap<>();
+        Map<Integer, Double> productPrices = new HashMap<>();
+        Map<Integer, String> discountedTicketCustomers = new HashMap<>();
+        Map<Integer, String> normalTicketCustomers = new HashMap<>();
+        Integer parsedBillId = null;
+        Double totalPrice = null;
+        Integer hallID = null;
+        Integer sessionID = null;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, billId);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String htmlContent = rs.getString("file_data");
+
+                // Parse the HTML content
+                String[] lines = htmlContent.split("\n");
+                boolean inProductsSection = false;
+                boolean inDiscountedTicketsSection = false;
+                boolean inNormalTicketsSection = false;
+
+                for (String line : lines) {
+                    line = line.trim();
+
+                    // Extract Bill ID
+                    if (line.contains("<h1>Bill ID:")) {
+                        parsedBillId = Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                    }
+
+                    // Extract Total Price
+                    if (line.contains("<h2>Total Price:")) {
+                        totalPrice = Double.parseDouble(line.replaceAll("[^0-9.]", ""));
+                    }
+
+                    // Extract Hall ID
+                    if (line.contains("<h3>Hall ID:")) {
+                        hallID = Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                    }
+
+                    // Extract Session ID
+                    if (line.contains("<h3>Session ID:")) {
+                        sessionID = Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                    }
+
+                    // Start parsing Products section
+                    if (line.contains("<h3>Products:</h3>")) {
+                        inProductsSection = true;
+                        inDiscountedTicketsSection = false;
+                        inNormalTicketsSection = false;
+                        continue;
+                    }
+
+                    // Start parsing Discounted Tickets section
+                    if (line.contains("<h3>Discounted Tickets:</h3>")) {
+                        inProductsSection = false;
+                        inDiscountedTicketsSection = true;
+                        inNormalTicketsSection = false;
+                        continue;
+                    }
+
+                    // Start parsing Normal Tickets section
+                    if (line.contains("<h3>Normal Tickets:</h3>")) {
+                        inProductsSection = false;
+                        inDiscountedTicketsSection = false;
+                        inNormalTicketsSection = true;
+                        continue;
+                    }
+
+                    // Parse Product details
+                    if (inProductsSection && line.contains("<li>")) {
+                        String productIdStr = line.split("Product ID:")[1].split(",")[0].trim();
+                        String quantityStr = line.split("Quantity:")[1].split(",")[0].trim();
+                        String priceStr = line.split("Price per Unit:")[1].split("</li>")[0].trim();
+
+                        int productId = Integer.parseInt(productIdStr);
+                        int quantity = Integer.parseInt(quantityStr);
+                        double price = Double.parseDouble(priceStr);
+
+                        productQuantities.put(productId, quantity);
+                        productPrices.put(productId, price);
+                    }
+
+                    // Parse Discounted Tickets details
+                    if (inDiscountedTicketsSection && line.contains("<li>")) {
+                        String seatNumberStr = line.split("Seat Number:")[1].split(",")[0].trim();
+                        String customerName = line.split("Customer Name:")[1].split("</li>")[0].trim();
+
+                        int seatNumber = Integer.parseInt(seatNumberStr);
+                        discountedTicketCustomers.put(seatNumber, customerName);
+                    }
+
+                    // Parse Normal Tickets details
+                    if (inNormalTicketsSection && line.contains("<li>")) {
+                        String seatNumberStr = line.split("Seat Number:")[1].split(",")[0].trim();
+                        String customerName = line.split("Customer Name:")[1].split("</li>")[0].trim();
+
+                        int seatNumber = Integer.parseInt(seatNumberStr);
+                        normalTicketCustomers.put(seatNumber, customerName);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Combine parsed data into a single result map
+        Map<String, Object> result = new HashMap<>();
+        result.put("billId", parsedBillId);
+        result.put("totalPrice", totalPrice);
+        result.put("hallID", hallID);
+        result.put("sessionID", sessionID);
+        result.put("productQuantities", productQuantities);
+        result.put("productPrices", productPrices);
+        result.put("discountedTicketCustomers", discountedTicketCustomers);
+        result.put("normalTicketCustomers", normalTicketCustomers);
+
+        return result;
+    }
+    /**
+ * Updates the HTML receipt in the database based on the provided updated map values.
+ *
+ * @param billId                   The ID of the bill to update.
+ * @param updatedValues            A map containing updated values:
+ *                                  - "totalPrice": Double (updated total price)
+ *                                  - "hallID": Integer (updated Hall ID)
+ *                                  - "sessionID": Integer (updated Session ID)
+ *                                  - "productQuantities": Map<Integer, Integer> (updated Product ID -> Quantity)
+ *                                  - "productPrices": Map<Integer, Double> (updated Product ID -> Price per Unit)
+ *                                  - "discountedTicketCustomers": Map<Integer, String> (updated Seat Number -> Customer Name for discounted tickets)
+ *                                  - "normalTicketCustomers": Map<Integer, String> (updated Seat Number -> Customer Name for normal tickets)
+ * @return True if the update is successful, false otherwise.
+ */
+public static boolean updateHTMLReceiptInDB(int billId, Map<String, Object> updatedValues) {
+    // Extract updated values from the map
+    Double totalPrice = (Double) updatedValues.get("totalPrice");
+    Integer hallID = (Integer) updatedValues.get("hallID");
+    Integer sessionID = (Integer) updatedValues.get("sessionID");
+    Map<Integer, Integer> productQuantities = (Map<Integer, Integer>) updatedValues.get("productQuantities");
+    Map<Integer, Double> productPrices = (Map<Integer, Double>) updatedValues.get("productPrices");
+    Map<Integer, String> discountedTicketCustomers = (Map<Integer, String>) updatedValues.get("discountedTicketCustomers");
+    Map<Integer, String> normalTicketCustomers = (Map<Integer, String>) updatedValues.get("normalTicketCustomers");
+
+    // Generate the updated HTML content
+    StringBuilder html = new StringBuilder();
+    html.append("<html>");
+    html.append("<head><title>Bill ").append(billId).append("</title></head>");
+    html.append("<body>");
+    html.append("<h1>Bill ID: ").append(billId).append("</h1>");
+    html.append("<h2>Total Price: $").append(totalPrice).append("</h2>");
+    html.append("<h3>Hall ID: ").append(hallID).append("</h3>");
+    html.append("<h3>Session ID: ").append(sessionID).append("</h3>");
+
+    html.append("<h3>Products:</h3><ul>");
+    for (Map.Entry<Integer, Integer> entry : productQuantities.entrySet()) {
+        int productId = entry.getKey();
+        int quantity = entry.getValue();
+        double price = productPrices.getOrDefault(productId, 0.0);
+        html.append("<li>Product ID: ").append(productId)
+            .append(", Quantity: ").append(quantity)
+            .append(", Price per Unit: $").append(price)
+            .append("</li>");
+    }
+    html.append("</ul>");
+
+    html.append("<h3>Discounted Tickets:</h3><ul>");
+    for (Map.Entry<Integer, String> entry : discountedTicketCustomers.entrySet()) {
+        html.append("<li>Seat Number: ").append(entry.getKey())
+            .append(", Customer Name: ").append(entry.getValue()).append("</li>");
+    }
+    html.append("</ul>");
+
+    html.append("<h3>Normal Tickets:</h3><ul>");
+    for (Map.Entry<Integer, String> entry : normalTicketCustomers.entrySet()) {
+        html.append("<li>Seat Number: ").append(entry.getKey())
+            .append(", Customer Name: ").append(entry.getValue()).append("</li>");
+    }
+    html.append("</ul>");
+
+    html.append("</body>");
+    html.append("</html>");
+
+    // Update the database with the new HTML content
+    String updateQuery = "UPDATE bills SET file_data = ? WHERE id = ?";
+    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+        pstmt.setString(1, html.toString()); // Updated HTML content
+        pstmt.setInt(2, billId); // Bill ID
+
+        int rowsAffected = pstmt.executeUpdate();
+        return rowsAffected > 0; // Return true if successful
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+    /**
+     *  refund process completed by updating the hall seat status and product stocks.
+     *
+     * @param hallId       (1 for HallA, 2 for HallB)
+     * @param sessionId    The ID of the session
+     * @param seatNumber   The seat number to be updated
+     * @param pricePerUnit The price per one of the product being refunded
+     * @param productId    The ID of the product being refunded
+     * @param quantity     The quantity of the product being refunded.
+     * @return True if all updates are successful, false otherwise.
+     */
+    public static boolean ticketRefund(int hallId, int sessionId, int seatNumber, double pricePerUnit, int productId, int quantity) {
+        String hallTable = hallId == 1 ? "HallA" : "HallB"; // Determine hall table
+        String updateSeatQuery = "UPDATE " + hallTable + " SET seat" + seatNumber + " = 0, numberOfbooked = numberOfbooked - 1 WHERE sessionID = ?";
+
+        try (PreparedStatement seatPstmt = connection.prepareStatement(updateSeatQuery)) {
+            // Update the seat status and numberOfbooked
+            seatPstmt.setInt(1, sessionId);
+            int rowsAffected = seatPstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Call updateStocksBCofRefund to update the products table
+                return updateStocksBCofRefund(productId, pricePerUnit, quantity);
+            } else {
+                System.out.println("Failed to update hall table. Check session ID or seat availability.");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * after refund update the product stock and revenue 
+     *
+     * @param productId    The ID of the refunded product
+     * @param pricePerUnit The price of per unit of the product in that time
+     * @param quantity     The amount of the product being refunded
+     * @return True if the product table update is successful, false otherwise.
+     */
+    public static boolean updateStocksBCofRefund(int productId, double pricePerUnit, int quantity) {
+        double fluctuation = pricePerUnit * quantity; // Calculate fluctuation for revenue
+        String query = "UPDATE products SET stock = stock + ?, sold = sold - ?, totalrevenue = totalrevenue - ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, quantity); // Increase stock
+            pstmt.setInt(2, quantity); // Decrease sold count
+            pstmt.setDouble(3, fluctuation); // Decrease total revenue
+            pstmt.setInt(4, productId); // Product ID
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Return true if successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     ////////////////////CHECK THE METHODS ABOVE IM NOT SURE ABOUT THEM
-    /// 
-    
+    public static List<Sessions> getSessions() { ///🟡🔺newnew
+        List<Sessions> sessionsList = new ArrayList<>();
+
+        String query = "SELECT * FROM sessions";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                // Retrieve data from the ResultSet
+                int id = rs.getInt("id");
+                int hallId = rs.getInt("hall_id");
+                int movieIdResult = rs.getInt("movie_id");
+                Date date = rs.getDate("date");
+                Time time = rs.getTime("time");
+
+                // Create a Sessions object and add it to the list
+                sessionsList.add(new Sessions(id, hallId, movieIdResult, date, time));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return sessionsList;
+    }
+
+
+
     // AFTER CUSTOMER SELECTS A MOVIE, TO SEE THE SESSIONS CALL THIS
     public static List<Sessions> getSessionsOfMovie(int movieId) {
         List<Sessions> sessionsList = new ArrayList<>();
