@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: #d1e2ee;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UpdateMovieController">
+   <children>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <GridPane alignment="CENTER" prefHeight="118.0" prefWidth="1200.0" style="-fx-background-color: #100050; -fx-background-radius: 30;" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="550.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.60003662109375" minWidth="10.0" prefWidth="200.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <padding>
+                  <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+               </padding>
+               <children>
+                  <Label alignment="CENTER" mouseTransparent="true" prefHeight="58.0" prefWidth="405.0" text="Group17 Cinema Center" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Role" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameSurnameLabel" alignment="CENTER" mouseTransparent="true" prefHeight="44.0" prefWidth="361.0" text="Name Surname" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="logout" alignment="CENTER" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyPressed="#logoutPressed" onMouseClicked="#logoutClicked" prefHeight="35.0" prefWidth="162.0" style="-fx-background-radius: 30;" text="LOGOUT" textAlignment="CENTER" textFill="#100050" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="Bell MT Bold" size="21.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.48" />
+                     </effect>
+                  </Button>
+                  <Button fx:id="backButton" alignment="CENTER" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyPressed="#backPressed" onMouseClicked="#backClicked" prefHeight="35.0" prefWidth="162.0" style="-fx-background-radius: 30;" text="BACK" textAlignment="CENTER" textFill="#100050">
+                     <padding>
+                        <Insets bottom="9.0" left="9.0" right="9.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="Bell MT Bold" size="21.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.48" />
+                     </effect>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </top>
+         <right>
+            <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="1194.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="295.20001220703125" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="768.8000000000001" minWidth="10.0" prefWidth="768.8000000000001" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <BorderPane fx:id="imageBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="260.0" style="-fx-border-color: #D53200;">
+                     <top>
+                        <ImageView fx:id="imageView" fitHeight="400.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+                     </top>
+                  </BorderPane>
+                  <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="794.0" spacing="40.0" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="titleTextField" maxWidth="396.0" onKeyTyped="#titleTextFieldTyped" prefHeight="37.0" prefWidth="396.0" promptText="Movie title here....">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </TextField>
+                        <ChoiceBox fx:id="genreChoiceBox" prefWidth="150.0" />
+                        <TextArea fx:id="summaryTextArea" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#summaryTextAreaTyped" prefHeight="231.0" prefWidth="587.0" promptText="Movie summary here...." wrapText="true">
+                           <font>
+                              <Font size="24.0" />
+                           </font></TextArea>
+                        <HBox alignment="CENTER" prefHeight="48.0" prefWidth="432.0" spacing="70.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                           <children>
+                              <ChoiceBox fx:id="moviePicker" prefHeight="40.0" prefWidth="200.0" />
+                              <Button fx:id="revertChangesButton" mnemonicParsing="false" onKeyPressed="#revertChangesPressed" onMouseClicked="#revertChangesClicked" prefHeight="40.0" prefWidth="214.0" style="-fx-background-color: #100050; -fx-background-radius: 30;" text="Reset Selection" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font></Button>
+                              <Button fx:id="deleteMovieButton" layoutX="312.0" layoutY="10.0" mnemonicParsing="false" onKeyPressed="#deleteMoviePressed" onMouseClicked="#deleteMovieClicked" prefHeight="40.0" prefWidth="211.0" style="-fx-background-color: #100050; -fx-background-radius: 30;" text="Delete Movie" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="applyChangesButton" mnemonicParsing="false" onKeyPressed="#applyChangesPressed" onMouseClicked="#applyChangesClicked" prefHeight="40.0" prefWidth="212.0" style="-fx-background-color: #100050; -fx-background-radius: 30;" text="Apply Changes" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font></Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Button fx:id="uploadImageButton" alignment="TOP_CENTER" mnemonicParsing="false" onKeyPressed="#uploadImagePressed" onMouseClicked="#uploadImageClicked" prefHeight="50.0" prefWidth="190.0" style="-fx-background-color: #100050; -fx-background-radius: 30;" text="Upload Image" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font></Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </GridPane>
+         </right>
+      </BorderPane>
+      <Button fx:id="titleButton" mnemonicParsing="false" onKeyPressed="#disappear" onMouseClicked="#disappear" prefHeight="73.0" prefWidth="433.0" style="-fx-background-color: #dde2ee;" text="Click to Update Title" AnchorPane.leftAnchor="530.0" AnchorPane.topAnchor="200.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="genreButton" mnemonicParsing="false" onKeyPressed="#disappear" onMouseClicked="#disappear" prefHeight="51.0" prefWidth="293.0" style="-fx-background-color: #dde2ee;" text="Click to Update Genre" AnchorPane.leftAnchor="600.0" AnchorPane.topAnchor="290.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="summaryButton" mnemonicParsing="false" onKeyPressed="#disappear" onMouseClicked="#disappear" prefHeight="259.0" prefWidth="674.0" style="-fx-background-color: #dde2ee;" text="Click to Update Summary" AnchorPane.leftAnchor="400.0" AnchorPane.topAnchor="350.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="posterButton" alignment="CENTER" mnemonicParsing="false" onKeyReleased="#disappear" onMouseClicked="#disappear" prefHeight="495.0" prefWidth="283.0" style="-fx-background-color: #dde2ee;" text="Click to Update Poster" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="160.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Label fx:id="noChangeLabel" prefHeight="38.0" prefWidth="277.0" style="visibility: false;" text="Warning: No changes were made!" textFill="RED" AnchorPane.leftAnchor="900.0" AnchorPane.topAnchor="690.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="emptyFieldsLabel" layoutX="876.0" layoutY="700.0" prefHeight="38.0" prefWidth="299.0" style="visibility: false;" text="Warning: Empty fields must be filled!" textFill="RED" AnchorPane.leftAnchor="876.0" AnchorPane.topAnchor="700.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="selectLabel" layoutX="886.0" layoutY="710.0" prefHeight="38.0" prefWidth="299.0" style="visibility: false;" text="Warning: Pick a Movie!" textFill="RED" AnchorPane.leftAnchor="880.0" AnchorPane.topAnchor="700.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="selectLabel1" layoutX="890.0" layoutY="710.0" prefHeight="38.0" prefWidth="212.0" style="visibility: false;" text="Movie has been changed." textFill="#00a100" AnchorPane.leftAnchor="980.0" AnchorPane.topAnchor="690.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="deleteMovieLabel" layoutX="990.0" layoutY="700.0" prefHeight="38.0" prefWidth="212.0" style="visibility: false;" text="Movie has been deleted." textFill="#00a100" AnchorPane.leftAnchor="750.0" AnchorPane.topAnchor="700.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="selectLabel2" layoutX="750.4" layoutY="691.2" prefHeight="38.0" prefWidth="237.0" style="visibility: false;" text="Warning: Pick a Movie!" textFill="RED" AnchorPane.leftAnchor="750.0" AnchorPane.topAnchor="691.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
