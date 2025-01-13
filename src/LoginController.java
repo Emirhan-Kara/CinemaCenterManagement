@@ -10,24 +10,51 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the login page
+ */
 public class LoginController
 {
+    /**
+     * Employee object that holds the data of the logged in user
+     */
     public static Employee loggedEmployee;
+
+    /**
+     * Vbox
+     */
     @FXML
     private VBox loginContainer;
 
+    /**
+     * Label to show error messages
+     */
     @FXML
     private Label errorMessage;
 
+    /**
+     * login button
+     */
     @FXML
     private Button loginButton;
 
+    /**
+     * password entry field
+     */
     @FXML
     private PasswordField password;
 
+    /**
+     * username entry field
+     */
     @FXML
     private TextField username;
 
+    /**
+     * event handler method for login button
+     * @param event mouse event
+     * @throws Exception for load scene
+     */
     @FXML
     void logicClicked(MouseEvent event) throws Exception 
     {
@@ -35,6 +62,11 @@ public class LoginController
             handleLogin();
     }
 
+    /**
+     * event handler method for enter key pressed action
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void enterKeyPressed(KeyEvent event) throws Exception
     {
@@ -48,6 +80,10 @@ public class LoginController
         }
     }
 
+    /**
+     * Condiiton checker method
+     * @throws Exception
+     */
     public void handleLogin() throws Exception
     {
         // check in the database
@@ -99,6 +135,9 @@ public class LoginController
         }
     }
 
+    /**
+     * To clear the input fields
+     */
     private void resetTextFields()
     {
         this.password.clear();
