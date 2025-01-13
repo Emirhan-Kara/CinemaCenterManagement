@@ -2,20 +2,42 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+/**
+ * Movie class to hold the entites of a movie such as id, titlei genre, summary and poster
+ */
 public class Movie {
-    public int id; // Movie ID (primary key in the database)
-    public String title; // Movie title
-    public String genre; // Movie genre
-    public byte[] poster; // Poster image stored as a byte array
-    public String summary; // Movie summary
+    /**
+     * Movie ID (primary key in the database)
+     */
+    public int id;
+
+    /**
+     * Movie title
+     */
+    public String title;
+
+    /**
+     * Movie genre
+     */
+    public String genre;
+
+    /**
+     * Poster image stored as a byte array
+     */
+    public byte[] poster;
+
+    /**
+     * Movie summary
+     */
+    public String summary;
 
     /**
      * Constructor for the Movie class
-     * @param id
-     * @param title
-     * @param genre
-     * @param poster
-     * @param summary
+     * @param id id
+     * @param title title
+     * @param genre genre
+     * @param poster poster
+     * @param summary summary
      */
     public Movie(int id, String title, String genre, byte[] poster, String summary) {
         this.id = id;
@@ -34,9 +56,10 @@ public class Movie {
 
     /**
      * Copy constructor for the Movie class
-     * @param movie
+     * @param movie movie object to be used in copy constructor
      */
-    public Movie(Movie movie) {
+    public Movie(Movie movie)
+    {
         this.title = movie.title;
         this.genre = movie.genre;
         this.summary = movie.summary;
@@ -46,7 +69,7 @@ public class Movie {
 
     /**
      * Method to set the movie poster, ImageView, from a file
-     * @param file
+     * @param file poster as file object
      */
     public void setPosterFromFile(File file) {
         try {
@@ -58,7 +81,7 @@ public class Movie {
 
     /**
      * Method to save the movie poster to a file
-     * @param file
+     * @param file poster as file object
      */
     public void savePosterToFile(File file) {
         try {
@@ -73,8 +96,8 @@ public class Movie {
     }
 
     /**
-     * Method to get string representation of the Movie object
-     * @return
+     * Method to get string representation of the Movie object, for debug
+     * @return string as whole
      */
     @Override
     public String toString() {
@@ -88,7 +111,7 @@ public class Movie {
 
     /**
      * Getter for title
-     * @return string
+     * @return title
      */
     public String getTitle() {
         return title;
@@ -96,7 +119,7 @@ public class Movie {
 
     /**
      * Setter for title
-     * @param title
+     * @param title title
      */
     public void setTitle(String title) {
         this.title = title;
@@ -112,7 +135,7 @@ public class Movie {
 
     /**
      * Setter for genre
-     * @param genre
+     * @param genre genre
      */
     public void setGenre(String genre) {
         this.genre = genre;
@@ -128,7 +151,7 @@ public class Movie {
 
     /**
      * Setter for summary
-     * @param summary
+     * @param summary summary
      */
     public void setSummary(String summary) {
         this.summary = summary;
@@ -144,7 +167,7 @@ public class Movie {
 
     /**
      * Setter for poster
-     * @param poster
+     * @param poster poster as byte array
      */
     public void setPoster(byte[] poster) {
         this.poster = poster;
@@ -152,7 +175,7 @@ public class Movie {
 
     /**
      * Getter for id
-     * @return
+     * @return id
      */
     public int getId() {
         return id;
@@ -160,7 +183,7 @@ public class Movie {
 
     /**
      * Setter for id
-     * @param id
+     * @param id id
      */
     public void setId(int id) {
         this.id = id;
