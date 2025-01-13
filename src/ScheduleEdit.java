@@ -22,71 +22,143 @@ import java.util.ArrayList;
 
 public class ScheduleEdit {
 
+    /**
+     * The current session being edited.
+     */
     Sessions currentSession = new Sessions();
 
+    /**
+     * The current movie associated with the session.
+     */
     Movie currentMovie = new Movie();
 
+    /**
+     * Button for updating a session.
+     */
     @FXML
     private Button updateSession;
 
+    /**
+     * Button for deleting a session.
+     */
     @FXML
     private Button deleteSession;
 
+    /**
+     * Button for applying changes to the schedule.
+     */
     @FXML
     private Button applyChangesSchedule;
 
+    /**
+     * ImageView for displaying the movie poster.
+     */
     @FXML
     private ImageView moviePoster;
 
+    /**
+     * Label for displaying the schedule list.
+     */
     @FXML
     private Label scheduleList;
 
+    /**
+     * TableColumn for displaying the movie name in the schedule.
+     */
     @FXML
     private TableColumn<Sessions, String> movieColumn;
 
+    /**
+     * TableColumn for displaying the date in the schedule.
+     */
     @FXML
     private TableColumn<Sessions, String> dateColumn;
 
+    /**
+     * Column for displaying hall number in schedule table
+     */
     @FXML
     private TableColumn<Sessions, String> hallColumn;
 
+    /**
+     * TableColumn for displayin time of the session on the schedule
+     */
     @FXML
     private TableColumn<Sessions, String> timeColumn;
 
+    /**
+     * back button to return to main admin page
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * Combobox to choose dates for session
+     */
     @FXML
     private ComboBox<String> dateSchedule;
 
+    /**
+     * Combobox to choose halls for 
+     */
     @FXML
     private ComboBox<String> hallSchedule;
 
+    /**
+     * logout button for returning to login
+     */
     @FXML
     private Button logout;
 
+    /**
+     * Combobox for picking movie for session
+     */
     @FXML
     private ComboBox<String> movieSchedule;
 
+    /**
+     * name surname for user label
+     */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+     * title of movie for the movieside label
+     */
     @FXML
     private Label movieTitle;
 
+    /**
+     * role of the user label
+     */
     @FXML
     private Label roleLabel;
 
+    /**
+     * Table for scheduling sessions
+     */
     @FXML
     private TableView<Schedule> scheduleTable;
 
+    /**
+     * Combobox for picking time for session
+     */
     @FXML
     private ComboBox<String> timeSchedule;
 
+    /**
+     * list of sessions to pull from database
+     */
     protected List<Sessions> sessionList;
 
+    /**
+     * list of schedules to store sessions to add to table
+     */
     protected List<Schedule> scheduleTableList = new ArrayList<Schedule>();
 
+    /**
+     * selected schedule from the table
+     */
     private Schedule selectedSchedule;
     //private ObservableList<ObservableList<String>> scheduleData = FXCollections.observableArrayList();
 
