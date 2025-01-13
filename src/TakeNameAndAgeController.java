@@ -9,120 +9,153 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * Controller for handling user input for name and age in a dialog window.
+ */
 public class TakeNameAndAgeController {
+
+    /**
+     * Label for displaying error messages.
+     */
     @FXML
     private Label errorText;
-    
+
+    /**
+     * Text field for entering the user's name.
+     */
     @FXML
     private TextField nameField;
 
+    /**
+     * Text field for entering the user's age.
+     */
     @FXML
     private TextField ageField;
 
+    /**
+     * Button to confirm the input.
+     */
     @FXML
     private Button okButton;
 
-    private int age; // Store the inputted age
-    private String name; // Store the inputted name
-    private boolean confirmed = false; // Flag to check if input was confirmed
-
+    /**
+     * Root grid pane for the dialog layout.
+     */
     @FXML
-    void initialize()
-    {
+    private GridPane gridPane;
+
+    /**
+     * Stores the inputted age.
+     */
+    private int age;
+
+    /**
+     * Stores the inputted name.
+     */
+    private String name;
+
+    /**
+     * Indicates whether the input has been confirmed.
+     */
+    private boolean confirmed = false;
+
+    /**
+     * Initializes the controller and sets the error label to an empty state.
+     */
+    @FXML
+    void initialize() {
         errorText.setText("");
     }
 
-
+    /**
+     * Checks whether the input has been confirmed.
+     *
+     * @return true if the input is confirmed, false otherwise.
+     */
     public boolean isConfirmed() {
         return this.confirmed;
     }
-    public int getAge()
-    {
+
+    /**
+     * Retrieves the user's inputted age.
+     *
+     * @return the age entered by the user.
+     */
+    public int getAge() {
         return this.age;
     }
-    public String getName()
-    {
+
+    /**
+     * Retrieves the user's inputted name.
+     *
+     * @return the name entered by the user.
+     */
+    public String getName() {
         return this.name;
     }
 
-
-    private boolean checkConditions()
-    {
+    /**
+     * Validates the user's input for name and age.
+     *
+     * @return true if the conditions are met and input is valid, false otherwise.
+     */
+    private boolean checkConditions() {
         String ageStr = ageField.getText().trim();
         this.name = nameField.getText().trim();
 
-        if(this.name.isEmpty())
-        {
+        if (this.name.isEmpty()) {
             errorText.setText("Enter your name");
             return false;
         }
-        if(ageStr.isEmpty())
-        {
+        if (ageStr.isEmpty()) {
             errorText.setText("Enter an age");
             return false;
         }
-        
-        
-        try
-        {
+
+        try {
             this.age = Integer.parseInt(ageStr);
 
-            if (age < 1 || age > 110)
-            {
+            if (age < 1 || age > 110) {
                 errorText.setText("Enter a valid age");
                 ageField.clear();
                 return false;
             }
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             errorText.setText("Age must be a number");
             ageField.clear();
             return false;
         }
 
-        if (!this.name.matches("[a-zA-ZçÇğĞıİöÖşŞüÜ]+"))
-        {
+        if (!this.name.matches("[a-zA-ZçÇğĞıİöÖşŞüÜ]+")) {
             errorText.setText("Name must contain only letters.");
             nameField.clear();
             return false;
         }
 
         System.out.println("Name: " + name + ", Age: " + age);
-        return true; // Mark as confirmed
+        return true; // Input is valid
     }
 
+    /**
+     * Handles the Enter key event to validate input and close the dialog if valid.
+     *
+     * @param event the key event triggered by pressing Enter.
+     */
     @FXML
-    private GridPane gridPane;
-    @FXML
-    void enterClicked(KeyEvent event)
-    {
+    void enterClicked(KeyEvent event) {
         if (event.getCode() != KeyCode.ENTER)
             return;
-        
-            this.confirmed = checkConditions();
 
-        if(this.confirmed)
-        {
-            // Close the stage
-            Stage stage = (Stage) okButton.getScene().getWindow();
-            stage.close();
-        }
-    }
-
-    @FXML
-    void okClicked(MouseEvent event)
-    {
-        if(event.getButton() != MouseButton.PRIMARY)
-            return;
-        
         this.confirmed = checkConditions();
 
-        if(this.confirmed)
-        {
+        if (this.confirmed) {
             // Close the stage
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
         }
     }
-}
+
+    /**
+     * Handles the mouse click event on the OK button to validate input and close the dialog if valid.
+     *
+     *
