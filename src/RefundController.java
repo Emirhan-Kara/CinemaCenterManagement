@@ -62,21 +62,41 @@ public class RefundController {
     @FXML
     private Label totalPriceLabel;
 
+    /**
+     * Handles the back button click event.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception {
         ManagerController.handleAction(null, event, "AdminMainPage.fxml");
     }
 
+    /**
+     * Handles the logout button click event.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * Handles the logout button key press event.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception {
         ManagerController.handleAction(null, event, "Login.fxml");
     }
 
+    /**
+     * Handles the back button click event.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception {
         ManagerController.handleAction(event, null, "AdminMainPage.fxml");
@@ -84,6 +104,11 @@ public class RefundController {
 
     private Map<String, Object> billMap;
 
+    /**
+     * This method is automatically called after the fxml file has been loaded.
+     * It initializes the table columns and binds them to the data.
+     * load tickettable and producttable with the data from the database
+     */
     @FXML
     void initialize()
     {
@@ -155,6 +180,9 @@ public class RefundController {
     private Product selectedProduct;
     private Ticket selectedTicket;
 
+    /**
+     * fill in the bill information labels with the data
+     */
     private void fillBillInfoLabels()
     {
         totalPriceLabel.setText(String.valueOf(this.totalPrice) + " ₺");
@@ -162,6 +190,12 @@ public class RefundController {
         session_id_label.setText(String.valueOf(this.session_id));
     }
 
+    /**
+     * Handles the input button click event.
+     * Checks for a valid billd ID and fills the bill information labels.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void inputButtonClicked(MouseEvent event)
     {
@@ -181,6 +215,12 @@ public class RefundController {
         }
     }
 
+    /**
+     * Handles the enter key press event.
+     * Checks for a valid billd ID and fills the bill information labels.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void enterClicked(KeyEvent event)
     {
@@ -200,6 +240,11 @@ public class RefundController {
         }
     }
 
+    /**
+     * Handles the refund product button click event.
+     * Refunds the selected product or ticket and updates the tables.
+     * @param event
+     */
     @FXML
     void refundClicked(MouseEvent event)
     {
@@ -263,6 +308,11 @@ public class RefundController {
     private ArrayList<Ticket> ticketList = new ArrayList<>();
     private ArrayList<Product> productList = new ArrayList<>();
 
+    /**
+     * Searches the database for the given bill ID and retrieves the bill data.
+     * Fills the ticket and product lists with the data.
+     * @param bill_id
+     */
     @SuppressWarnings("unchecked")
     private void searchAndGetBillID(int bill_id)
     {
@@ -342,6 +392,9 @@ public class RefundController {
     private double totalRefundedMoney;
 
 
+    /**
+     * Clears the data and resets the fields.
+     */
     private void clearData()
     {
         refundProduct.setDisable(true);
@@ -376,6 +429,9 @@ public class RefundController {
         errorMessage.setText("");
     }
 
+    /**
+     * Fills the products table with the data from the productList.
+     */
     private void fillProductsTable()
     {
         productsTable.getItems().clear();
@@ -383,6 +439,9 @@ public class RefundController {
         productsTable.getItems().addAll(productList);
     }
 
+    /**
+     * Fills the seats table with the data from the ticketList.
+     */
     private void fillSeatsTable()
     {
         // Clear existing items in the table
@@ -392,11 +451,15 @@ public class RefundController {
         ticketsTable.getItems().addAll(ticketList);
     }
 
-
     private Map<Integer, Integer> updatedProductQuantities = new HashMap<>();
     private Map<Integer, String> updatedDiscountedTicketCustomers = new HashMap<>();
     private Map<Integer, String> updatedNormalTicketCustomers = new HashMap<>();
 
+    /**
+     * Creates updated maps for the product quantities and ticket customers.
+     * Updates the HTML receipt in the database and ensures the local HTML file is synchronized.
+     * 
+     */
     private void createUpdatedMaps() {
         // Reset updated maps
         updatedProductQuantities.clear();
@@ -448,6 +511,14 @@ public class RefundController {
             throw new RuntimeException("Failed to update the HTML receipt in the database.");
         }    
     } */
+
+
+   /**
+    * Generates and saves the HTML receipt to a file.
+    * The file is saved in the same directory as the program.
+    * the HTML content is saved to the database.
+    * @throws IOException if the file cannot be written. 
+    */
     public void generateAndSaveHTML()
     {
         String filePath = "bill_" + this.bill_id + ".html"; // File path
