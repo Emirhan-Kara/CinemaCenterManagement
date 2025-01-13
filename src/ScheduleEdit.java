@@ -93,6 +93,14 @@ public class ScheduleEdit {
     // Data structure to hold schedules and track locked sessions
     private final Map<String, Boolean> scheduleLock = new HashMap<>();
 
+    /**
+     * Initializes the ScheduleEdit page with the sessions from the database.
+     * Populates the combo boxes with the unique values from the sessions.
+     * Populates the table view with the sessions from the database.
+     * Sets the cell value factories for the table view.
+     * Sets the on click event for the table view to update the movie side.
+     * 
+     */
     @FXML
     public void initialize() {
 
@@ -118,7 +126,7 @@ public class ScheduleEdit {
             times1.add(session.getTime());
         }
         // Set items for the combo boxes
-        List<Movie> moviesList = DatabaseConnection.getAllMovies();
+        List<Movie> moviesList = DatabaseConnection.getMovies();
         ObservableList<String> movieTitles = FXCollections.observableArrayList();
         for (Movie movie : moviesList) {
             movieTitles.add(movie.getTitle());
@@ -179,16 +187,24 @@ public class ScheduleEdit {
         });
     }
 
+    /**
+     * Updates the combo boxes with the values from the selected schedule
+     * @param schedule
+     */
     void updateComboBoxes(Schedule schedule) {
         movieSchedule.setValue(schedule.getMovie());
         dateSchedule.setValue(schedule.getDate().toString());
         timeSchedule.setValue(schedule.getTime().toString());
         hallSchedule.setValue(String.valueOf(schedule.getHallId()));
     }
+    /**
+     * Updates the schedule table with the sessions from the database
+     * and populates the scheduleTableList with the sessions from the database
+     */
     void updateScheduleTable(){
         sessionList = DatabaseConnection.getSessions();
         scheduleTableList.clear();
-        ObservableList<String> movies1 = FXCollections.observableArrayList(); // Changed to String for movie titles
+        ObservableList<String> movies1 = FXCollections.observableArrayList(); 
         ObservableList<Date> dates1 = FXCollections.observableArrayList();
         ObservableList<Integer> halls1 = FXCollections.observableArrayList();
         ObservableList<Time> times1 = FXCollections.observableArrayList();
@@ -213,6 +229,10 @@ public class ScheduleEdit {
         } 
         scheduleTable.setItems(FXCollections.observableArrayList(scheduleTableList));
     }
+    /**
+     * Updates the movie elements with the selected movie's title and poster
+     * when the session chosen have been changed
+     */
     void updateMovieSide(){
         if(currentMovie == null){
             return;
@@ -223,7 +243,14 @@ public class ScheduleEdit {
         moviePoster.setImage(image);
     }
 
-    // The event handler for apply changes
+    /**
+     * Adds a new session to the database with the values from the combo boxes.
+     * Checks for incomplete selection, if not shows an alert.
+     * Gives failed to add session alert if there is conflict.
+     * updates the tableview to show the newly added session
+     * 
+     * @param event
+     */
     @FXML
     void applyChangesClicked(MouseEvent event) {
         String selectedMovie = movieSchedule.getValue();
@@ -232,13 +259,10 @@ public class ScheduleEdit {
         String selectedHall = hallSchedule.getValue();
     
         if (selectedMovie == null || selectedDate == null || selectedTime == null || selectedHall == null) {
-            showAlert("Incomplete Selection", "Please select a movie, date, time, and hall.");
-            return;
-        }
-        if (selectedMovie == null || selectedDate == null || selectedTime == null || selectedHall == null) {
             showAlert("Incomplete Selection", "Please select a movie, date, session, and hall.");
             return;
         }
+        
         currentSession.setMovieId(Integer.valueOf(DatabaseConnection.getMovie_byTitle(selectedMovie).getId()));
         currentSession.setDate(Date.valueOf(selectedDate));
         currentSession.setTime(Time.valueOf(selectedTime));
@@ -251,11 +275,19 @@ public class ScheduleEdit {
             return;  
         }
         else{
-            showAlert("Error", "Session is already reserved.");
+            showAlert("Error", "Failed to add the new session due to duplicate entry.");
             return;
         }
     }
     
+    /**
+     * Adds a new session to the database with the values from the combo boxes.
+     * Checks for incomplete selection, if not shows an alert.
+     * Gives failed to add session alert if there is conflict.
+     * updates the tableview to show the newly added session
+     * 
+     * @param event
+     */
     @FXML
     void applyChangesPressed(KeyEvent event) {
         String selectedMovie = movieSchedule.getValue();
@@ -282,11 +314,20 @@ public class ScheduleEdit {
                 return;  
             }
             else{
-                showAlert("Error", "Session is already reserved.");
+                showAlert("Error", "Failed to add the new session due to duplicate entry.");
                 return;
             }
     }
 
+    /**
+     * Updates the selected session with the new values from the combo boxes.
+     * Changes the schedule object in the tableview, and turns it into a new session object.
+     * To get the id of the session, it gets the id from the sessionList.
+     * Checks for a non-null selection, if not shows an alert.
+     * Checks for incomplete selection, if not shows an alert.
+     * Gives failed to update session alert if there is conflict.
+     * @param event
+     */
     @FXML
     void updateSessionClicked(MouseEvent event) {
         if (selectedSchedule == null) {
@@ -342,6 +383,15 @@ public class ScheduleEdit {
         }
     }
 
+    /**
+     * Updates the selected session with the new values from the combo boxes.
+     * Changes the schedule object in the tableview, and turns it into a new session object.
+     * To get the id of the session, it gets the id from the sessionList.
+     * Checks for a non-null selection, if not shows an alert.
+     * Checks for incomplete selection, if not shows an alert.
+     * Gives failed to update session alert if there is conflict.
+     * @param event
+     */
     @FXML
     void updateSessionPressed(KeyEvent event) {
         if (selectedSchedule == null) {
@@ -369,23 +419,39 @@ public class ScheduleEdit {
         newSession.setHallId(Integer.valueOf(selectedHall));
     
         for(Sessions session : sessionList){
-            if(session.getDate() == newSession.getDate() || session.getTime() == newSession.getTime() || session.getHallId() == newSession.getHallId()){
+            if(session.getDate().equals(currentSession.getDate()) && session.getTime().equals(currentSession.getTime()) && session.getHallId() == currentSession.getHallId()) {
                 newSession.setId(session.getId());
                 newSession.setMovieId(DatabaseConnection.getMovie_byTitle(selectedMovie).getId());
             }
         }
+        if(currentSession.getDate().equals(newSession.getDate()) && currentSession.getTime().equals(newSession.getTime()) && currentSession.getHallId() == newSession.getHallId() && currentSession.getMovieId() == newSession.getMovieId()){
+            showAlert("No Change", "No changes have been made.");
+            return;
+        }
+        if(currentSession == newSession){
+            showAlert("No Change", "No changes have been made.");
+            return;
+
+        }
         if(DatabaseConnection.updateSession(currentSession, newSession)){
             sessionList = DatabaseConnection.getSessions();
+            currentSession = newSession;
+            selectedSchedule = null;
             updateScheduleTable();
             showAlert("Success", "Schedule has been successfully added.");
             return;  
         }
         else{
-            showAlert("Error", "Failed to update the session.");
+            showAlert("Error", "There was a conflict between sessions.");
             return;
         }
     }
 
+    /**
+     * Deletes the selected session from the database.
+     * Checks if any session is selected, if not shows an alert.
+     * @param event
+     */
     @FXML
     void deleteSessionClicked(MouseEvent event) {
         //Sessions newSession =  new Schedule.getSession(selectedSchedule);//get from the list
@@ -400,10 +466,15 @@ public class ScheduleEdit {
             return;
         }
         else{
-            showAlert("Error", "Cannot delete the session due to booked seats.");
+            showAlert("Error", "Failed to delete Session.");
         }
     }
 
+    /**
+     * Deletes the selected session from the database.
+     * Checks if any session is selected, if not shows an alert.
+     * @param event
+     */
     @FXML
     void deleteSessionPressed(KeyEvent event) {
         //Sessions newSession =  new Schedule.getSession(selectedSchedule);//get from the list
@@ -419,34 +490,55 @@ public class ScheduleEdit {
             return;
         }
         else{
-            showAlert("Error", "Cannot delete the session due to booked seats.");
+            showAlert("Error", "Failed to delete Session.");
         }
     }
 
-    // Example back button event handler
+    /**
+     * Returns to the main page when back button is clicked
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception {
         ManagerController.handleAction(event, null, "AdminMainPage.fxml");
     }
     
-    // Example back button press event handler
+    /**
+     * Returns to the main page when back button is pressed
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception{
         ManagerController.handleAction(null, event, "AdminMainPage.fxml");
     }
     
+    /**
+     * Logs out the user and returns to the login page.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * Logs out the user and returns to the login page.
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception {
         ManagerController.handleAction(null, event, "Login.fxml");
     }
     
-    
-    // Show alert method
+    /**
+     * Shows an alert with the given title and message.
+     * @param title
+     * @param message
+     */    
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
