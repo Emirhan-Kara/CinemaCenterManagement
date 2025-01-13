@@ -3,19 +3,54 @@ import java.util.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class Bill {
+/**
+ * Bill class that holds the values related with the receipt
+ */
+public class Bill
+{
+    /**
+     * Bill id is primary key in database
+     */
     public int id; // Bill ID to save and check
+
+    /**
+     * Hashmap with the product id, product quantity mapping
+     */
     public Map<Integer, Integer> productQuantities; // Product ID -> desired Quantity
+
+    /**
+     * Hashmap with the product id, product price mapping
+     */
     public Map<Integer, Double> productPrices;
+
+    /**
+     * Hashmap with the seat number, customer name mapping for discounted tickets
+     */
     public Map<Integer, String> discountedTicketCustomers; // Seat Number -> Customer Name
+
+    /**
+     * Hashmap with the seat number, customer name mapping for non-discounter tickets
+     */
     public Map<Integer, String> normalTicketCustomers; // Seat Number -> Customer Name
 
+    /**
+     * Total price of the bill
+     */
     public double totalPrice; // Total price of the bill
-    // 🔺🟡
+    
+    /**
+     * Hall id of the bought tickets
+     */
     public int hallID;
+
+    /**
+     * Session id of the bought tickets
+     */
     public int sessionID;
 
-    // Constructor
+    /**
+     * Default cosntructor to initilze the parameters
+     */
     public Bill() {
         this.productQuantities = new HashMap<>();
         this.discountedTicketCustomers = new HashMap<>();
@@ -27,7 +62,8 @@ public class Bill {
 
     /**
      * Creates a new bill in the database and retrieves the generated bill ID.
-     *
+     * Bill id is a primary key in the database, used to identify the bills
+     * 
      * @return The generated Bill ID.
      */
     private int createBillInDatabase() {
@@ -49,8 +85,7 @@ public class Bill {
 
     /**
      * Adds tickets (normal or discounted) to the bill.
-     * Updates the Hall table for seat assignments and populates the
-     * `discountedTicketCustomers` map.
+     * Also fills the discounted and normal ticket maps while iterating
      *
      * @param seatCustomerMap A map of seat numbers to customer names.
      * @param hallId          The Hall ID.
@@ -95,7 +130,6 @@ public class Bill {
     }
 
     /**
-     * AGAIN FIRST ENABLE CUSTOMER TO APPROVE THE BILL
      * Adds the general product (non-ticket) to the bill.
      *
      * @param productId The product ID.
@@ -118,74 +152,6 @@ public class Bill {
         // Don't forget stock and sales in the database
         DatabaseConnection.updateProductStockAndSales_DB(productId, quantity);
     }
-
-    /**
-     * Generates an HTML file for the bill, saves it to the database, and returns the file URI.
-     *
-     * @return The URI of the generated HTML file.
-     
-    public String generateAndSaveHTML() {
-        String filePath = "bill_" + id + ".html"; // File path
-        File file = new File(filePath);
-
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            // Generate HTML content
-            StringBuilder html = new StringBuilder();
-
-            html.append("<html>");
-            html.append("<head><title>Bill ").append(id).append("</title></head>");
-            html.append("<body>");
-            html.append("<h1>Bill ID: ").append(id).append("</h1>");
-            html.append("<h2>Total Price: $").append(totalPrice).append("</h2>");
-            html.append("<h3>Hall ID: ").append(hallID).append("</h3>");
-            html.append("<h3>Session ID: ").append(sessionID).append("</h3>");
-
-            html.append("<h3>Products:</h3><ul>");
-            for (Map.Entry<Integer, Integer> entry : productQuantities.entrySet()) {
-                int productId = entry.getKey();
-                int quantity = entry.getValue();
-                double price = productPrices.getOrDefault(productId, 0.0);
-                html.append("<li>Product ID: ").append(productId)
-                    .append(", Quantity: ").append(quantity)
-                    .append(", Price per Unit: $").append(price)
-                    .append("</li>");
-            }
-            html.append("</ul>");
-
-            html.append("<h3>Discounted Tickets:</h3><ul>");
-            for (Map.Entry<Integer, String> entry : discountedTicketCustomers.entrySet()) {
-                html.append("<li>Seat Number: ").append(entry.getKey())
-                    .append(", Customer Name: ").append(entry.getValue()).append("</li>");
-            }
-            html.append("</ul>");
-
-
-            html.append("<h3>Normal Tickets:</h3><ul>");
-            for (Map.Entry<Integer, String> entry : normalTicketCustomers.entrySet()) {
-                html.append("<li>Seat Number: ").append(entry.getKey())
-                    .append(", Customer Name: ").append(entry.getValue()).append("</li>");
-            }
-
-
-            html.append("</ul>");
-            html.append("</body>");
-            html.append("</html>");
-
-            // Write to file
-            writer.write(html.toString());
-
-            // Save the HTML content to the database
-            DatabaseConnection.saveHTMLToDB(id, html.toString());
-
-            // Return the file URI for WebView or other purposes
-            return file.toURI().toString();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    */
 
 
     /**
@@ -256,10 +222,10 @@ public class Bill {
 
 
 
-
     /**
-     * Save the total price of the bill to the database. You know the id already,
-     * it is returned by the method at top.
+     * Saves the total price to the database, and calls generateAndSaveHTML method.
+     * Basically, creates a bill and puts it to the database
+     * @return file URI of the HTML receipt
      */
     public String finalizeBill() {
         String query = "UPDATE bills SET total_price = ? WHERE id = ?";
@@ -273,100 +239,5 @@ public class Bill {
             throw new RuntimeException("Failed to finalize the bill in the database.");
         }
     }
-
-    /**
-     * Adds normal tickets to the bill after ensuring the customer's decision.
-     * Updates the Hall table for seat assignments and increments the number of
-     * booked seats.
-     * Stores seat numbers in a map with null values since customer names are not
-     * needed.
-     *
-     * @param quantity    The quantity of tickets.
-     * @param seatNumbers The list of seat numbers.
-     * @param hallId      The Hall ID.
-     * @param sessionId   The Session ID.
-     */
-    /*
-     * public void addNormalTicket(int quantity, List<Integer> seatNumbers, int
-     * hallId, int sessionId) {
-     * if (seatNumbers.size() != quantity) {
-     * throw new
-     * IllegalArgumentException("The number of seats must match the quantity.");
-     * }
-     * 
-     * int productId = 1; // Normal ticket product ID
-     * 
-     * // Update seat assignments in the Hall table
-     * for (int seatNumber : seatNumbers) {
-     * DatabaseConnection.updateSeatInHall(hallId, sessionId, seatNumber, id); //
-     * Normal ticket = positive bill ID
-     * discountedTicketCustomers.put(seatNumber, null); // Store seat number with
-     * null value
-     * }
-     * 
-     * // Increment the number of booked seats
-     * DatabaseConnection.incrementBookedSeats(hallId, sessionId, quantity);
-     * 
-     * // Add the tickets to the product quantities map
-     * productQuantities.put(productId, productQuantities.getOrDefault(productId, 0)
-     * + quantity);
-     * 
-     * // Update the total price
-     * double productPrice = DatabaseConnection.getProductPrice(productId);
-     * totalPrice += productPrice * quantity;
-     * 
-     * // Update product stock and sales in the database
-     * DatabaseConnection.updateProductStockAndSales_DB(productId, quantity);
-     * }
-     * 
-     * 
-     * /**
-     * Adds discounted tickets with customer names to the bill.
-     *
-     * @param seatNumbers The list of seat numbers for the tickets.
-     * 
-     * @param hallId The Hall ID.
-     * 
-     * @param sessionId The Session ID.
-     * 
-     * @param customerNames The list of customer names corresponding to seat
-     * numbers.
-     * 
-     * 
-     * public void addDiscountedTickets(List<Integer> seatNumbers, int hallId, int
-     * sessionId, List<String> customerNames) {
-     * if (seatNumbers.size() != customerNames.size()) {
-     * throw new
-     * IllegalArgumentException("Seat numbers and customer names must have the same size."
-     * );
-     * }
-     * 
-     * int quantity = seatNumbers.size();
-     * 
-     * for (int i = 0; i < seatNumbers.size(); i++) {
-     * int seatNumber = seatNumbers.get(i);
-     * String customerName = customerNames.get(i);
-     * 
-     * // Add seat number and customer name to the map
-     * discountedTicketCustomers.put(seatNumber, customerName);
-     * 
-     * // Update seat assignment in the Hall table
-     * DatabaseConnection.updateSeatInHall(hallId, sessionId, seatNumber, -id); //
-     * -id for discounted tickets
-     * }
-     * 
-     * // Add the tickets to the product quantities map (product ID 5 for discounted
-     * tickets)
-     * productQuantities.put(5, productQuantities.getOrDefault(5, 0) + quantity);
-     * 
-     * // Increment the total price
-     * double productPrice = DatabaseConnection.getProductPrice(5); // Get price for
-     * discounted ticket
-     * totalPrice += productPrice * quantity;
-     * 
-     * // Update product stock and sales
-     * DatabaseConnection.updateProductStockAndSales_DB(5, quantity);
-     * }
-     */
 
 }
