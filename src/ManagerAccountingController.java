@@ -20,62 +20,122 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.chart.PieChart;
 
+/**
+ * Controller class for manager's accounting scene
+ * Shows the total revenue, tax, how mmany items are sold, how much money they bring
+ */
 public class ManagerAccountingController {
 
+    /**
+     * back button
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * logout button
+     */
     @FXML
     private Button logout;
 
+    /**
+     * revenue label
+     */
     @FXML
     private Label netRevenueLabel;
 
+    /**
+     * pie chart to show revenue and tax
+     */
     @FXML
     private PieChart pieChart;
 
+    /**
+     * barchart to show product-spesific revenues
+     */
     @FXML
     private BarChart<String, Double> revenueChart;
 
+    /**
+     * barchart to show product-spesific sold amounts
+     */
     @FXML
     private BarChart<String, Double> salesChart;
 
+    /**
+     * tax label
+     */
     @FXML
     private Label taxLabel;
 
+    /**
+     * total money label
+     */
     @FXML
     private Label totalLabel;
 
+    /**
+     * x axis for revenue
+     */
     @FXML
     private CategoryAxis xAxisRevenue;
 
+    /**
+     * x axis for sales
+     */
     @FXML
     private CategoryAxis xAxisSales;
 
+    /**
+     * y axis for revenue
+     */
     @FXML
     private NumberAxis yAxisRevenue;
 
+    /**
+     * y axis for sales
+     */
     @FXML
     private NumberAxis yAxisSales;
 
+    /**
+     * event handler for back button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for back button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for logout button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * event handler for logout button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception
     {
@@ -83,6 +143,9 @@ public class ManagerAccountingController {
     }
 
 
+    /**
+     * Initializer that calcualtes everything and creates the charts
+     */
     @FXML
     private void initialize()
     {
@@ -141,7 +204,11 @@ public class ManagerAccountingController {
 
     }
 
+    /**
+     * to put names in order
+     */
     private String[] productNamesInOrder = {"Normal Ticket", "Food", "Beverage", "Toy", "Discounted Ticket"};
+    
     /**
      * Populates a BarChart with data
      *
