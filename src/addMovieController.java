@@ -23,33 +23,58 @@ import java.io.IOException;
  * This class manages the user interface for adding movie details and saving them to the database.
  */
 public class AddMovieController {
-
-    // Static movie instance to store the movie details being added
+    /**
+     * Movie object to store from scene and upload to database
+     */
     public static Movie movie = new Movie();
 
+    /**
+     * role label for user
+     */
     @FXML
-    private Label roleLabel; // Label to display the role of the logged-in user
+    private Label roleLabel;
 
+    /**
+     * name surname label of the user
+     */
     @FXML
-    private Label nameSurnameLabel; // Label to display the name of the logged-in user
+    private Label nameSurnameLabel;
 
+    /**
+     * Summary of movie will be given here
+     */
     @FXML
-    private TextArea summaryTextArea; // Text area for entering the movie summary
+    private TextArea summaryTextArea;
 
+    /**
+     * title of the movie will be taken from here
+     */
     @FXML
-    private TextField titleTextField; // Text field for entering the movie title
+    private TextField titleTextField;
 
+    /**
+     * adding movies will be on this button
+     */
     @FXML
-    private Button applyChangesButton; // Button to save the movie details
+    private Button applyChangesButton;
 
+    /**
+     * uploading image from local machine will be
+     */
     @FXML
-    private Button uploadImageButton; // Button to upload a movie poster image
+    private Button uploadImageButton;
 
+    /**
+     * imageView to show the uploaded image
+     */
     @FXML
-    private ImageView imageView; // Image view to display the uploaded movie poster
+    private ImageView imageView;
 
+    /**
+     * logout button to return to login page
+     */
     @FXML
-    private Button logout; // Button to log out from the application
+    private Button logout;
 }
     /**
      * Handles the logout button click event to navigate to the login screen.
