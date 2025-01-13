@@ -10,28 +10,52 @@ import javafx.scene.control.Label;
  * Controller class for the admin page.
  */
 public class AdminPageController {
-    
+
+    /**
+    * label for user role
+    */
     @FXML
     private Label roleLabel;
 
+    /**
+    * label for name surname of user
+    */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+    * button to add movie to database
+    */
     @FXML
     private Button addMovieButton;
 
+    /**
+    * update Movie button for scene change
+    */
     @FXML
     private Button updateMovieButton;
 
+    /**
+    * schedule Button for scene change
+    */
     @FXML
     private Button scheduleButton;
 
+    /**
+    * logout button to return to login    
+    */
     @FXML
     private Button logout;
 
+    /**
+    * refund scene Button
+    */
     @FXML
     private Button refundsButton;
 
+    /**
+    * going back to login scene button
+    */
     @FXML
     private Button backButton;
 
