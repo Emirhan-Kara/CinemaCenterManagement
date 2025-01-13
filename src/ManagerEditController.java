@@ -8,93 +8,173 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Controller class for manager's edit scene
+ */
 public class ManagerEditController
 {
     // top of the screen
+    /**
+     * back button
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * logout button
+     */
     @FXML
     private Button logout;
 
+    /**
+     * name surname label
+     */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+     * role label
+     */
     @FXML
     private Label roleLabel;
 
     
 
     // TextFields for the inputs
+    /**
+     * surname input field
+     */
     @FXML
     private TextField surnameInput;
 
+    /**
+     * username input field
+     */
     @FXML
     private TextField usernameInput;
 
+    /**
+     * password input field
+     */
     @FXML
     private TextField passwordInput;
 
+    /**
+     * name input field
+     */
     @FXML
     private TextField nameInput;
 
+    /**
+     * role input field
+     */
     @FXML
     private TextField roleInput;
 
 
 
+    /**
+     * update button
+     */
     @FXML
     private Button updateButton;
 
+    /**
+     * name error label
+     */
     @FXML
     private Label nameErrorLabel;
 
+    /**
+     * surname error label
+     */
     @FXML
     private Label surnameErrorLabel;
 
+    /**
+     * username error label
+     */
     @FXML
     private Label usernameErrorLabel;
 
+    /**
+     * password error label
+     */
     @FXML
     private Label passwordErrorLabel;
 
     /////////////////////////////////////////////////////
 
+    /**
+     * radio button for name
+     */
     @FXML
     private RadioButton editNameSelection;
 
+    /**
+     * radio button for password
+     */
     @FXML
     private RadioButton editPasswordSelection;
 
+    /**
+     * radio button for surname
+     */
     @FXML
     private RadioButton editSurnameSelection;
 
+    /**
+     * radio button for username
+     */
     @FXML
     private RadioButton editUsernameSelection;
 
+    /**
+     * radio button for role
+     */
     @FXML
     private RadioButton editRoleSelection;
 
     ///////////////////////////////////////////////////////
 
+    /**
+     * event handler for back button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for back button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for logout button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * event handler for logout button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception
     {
@@ -102,12 +182,34 @@ public class ManagerEditController
     }
 
 
+    /**
+     * current name of the selected user
+     */
     private String curName;
+
+    /**
+     * current surname of the selected user
+     */
     private String curSurname;
+
+    /**
+     * current username of the selected user
+     */
     private String curUsername;
+
+    /**
+     * current password of the selected user
+     */
     private String curPassword;
+
+    /**
+     * current role of the selected user
+     */
     private String curRole;
 
+    /**
+     * Initialize method to setup the scene, bind the selectionss
+     */
     @FXML
     private void initialize()
     {
@@ -157,6 +259,9 @@ public class ManagerEditController
         );
     }
     
+    /**
+     * To switch role
+     */
     @FXML
     void handleRoleSelection()
     {
@@ -166,8 +271,15 @@ public class ManagerEditController
             roleInput.setText(curRole);
     }
 
+    /**
+     * update button clicked event handler
+     * Checks the conditions
+     * @param event mounse vent
+     * @throws Exception for load scene
+     */
     @FXML
-    private void updateClicked(MouseEvent event) throws Exception {
+    private void updateClicked(MouseEvent event) throws Exception
+    {
         // Determine which field is being updated
         if (editNameSelection.isSelected())
         {
@@ -237,6 +349,11 @@ public class ManagerEditController
         }
     }
 
+    /**
+     * Capitalizes the first letter of the name and surname
+     * @param input name or surname
+     * @return first letter capitalized string
+     */
     private String capitalizeFirstLetter(String input)
     {
         if (input == null || input.isEmpty())
@@ -245,6 +362,11 @@ public class ManagerEditController
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 
+    /**
+     * Control cases for passwords
+     * @param password password to be controlled
+     * @return true if the conditions satisfied, else false
+     */
     private boolean checkPassword(String password)
     {
         if (password == null || password.trim().isEmpty())
@@ -281,6 +403,11 @@ public class ManagerEditController
         return true;
     }
 
+    /**
+     * Control cases for username
+     * @param username username to be controlled
+     * @return true if the conditions satisfied, else false
+     */
     private boolean checkUsername(String username)
     {
         if (username == null || username.trim().isEmpty())
@@ -311,6 +438,11 @@ public class ManagerEditController
         return true;
     }
 
+    /**
+     * Control cases for surname
+     * @param surname surname to be controlled
+     * @return true if the conditions satisfied, else false
+     */
     private boolean checkSurname(String surname)
     {
         if (surname == null || surname.trim().isEmpty())
@@ -335,6 +467,11 @@ public class ManagerEditController
         return true;
     }
 
+    /**
+     * Control cases for name
+     * @param name name to be controlled
+     * @return true if the conditions satisfied, else false
+     */
     private boolean checkName(String name)
     {
         if (name == null || name.trim().isEmpty())
