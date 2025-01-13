@@ -13,6 +13,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,22 +46,50 @@ public class addMovieController {
     @FXML
     private Button logout;
 
+    /**
+     * This method will be called when the logout button is clicked
+     * To load the login screen
+     * 
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception {
         handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * This method will be called when the logout button is pressed
+     * To load the login screen
+     * 
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception {
         handleAction(null, event, "Login.fxml");
     }
 
+    /**
+     * This method will be called when the back button is clicked
+     * To load the Admin Main page
+     * 
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "AdminMainPage.fxml");
     }
 
+    /**
+     * This method will be called when the back button is pressed
+     * To load the Admin Main page
+     * 
+     * @param event
+     * @throws Exception
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception
     {
@@ -68,6 +97,12 @@ public class addMovieController {
     }
     
 
+    /**
+     * This is the initializer for the addMovieController
+     * Loads the necessary objects in the FXML file
+     * Adds the genres to the choice box and sets the default value
+     * Adds listener to the choice box to update the movie genre
+     */
     @FXML
     public void initialize() {
 
@@ -75,7 +110,7 @@ public class addMovieController {
         roleLabel.setText(LoginController.loggedEmployee.getUserRole());
         // Initialization code if needed
         // Add items to the ChoiceBox
-        genreChoiceBox.getItems().addAll("Sci-Fi", "Animation", "Horror", "Comedy", "Love", "Fantasy", "Drama", "Action", "Adventure", "Crime", "Documentary", "Sports");
+        genreChoiceBox.getItems().addAll("Sci-Fi", "Animation", "Horror", "Drama", "Love", "Fantasy");
 
         // Set a default value (when no selection is made)
         genreChoiceBox.setValue("Select Genre"); // This shows as the current value initially
@@ -86,22 +121,17 @@ public class addMovieController {
                 movie.setGenre(newValue); // Update the movie genre
             }
         });
-
-        /* titleTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                titleTextFieldChanged(newValue);
-            }
-        });
-
-        summaryTextArea.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                summaryTextAreaChanged(newValue);
-            }
-        }); */
     }
 
+    /**
+     * This method will handle the action when the mouse is clicked or the enter key is pressed
+     * for loading another page
+     * 
+     * @param mouseEvent
+     * @param keyEvent
+     * @param fxmlPath
+     * @throws Exception
+     */
     public static void handleAction(MouseEvent mouseEvent, KeyEvent keyEvent, String fxmlPath) throws Exception {
         if (mouseEvent != null && mouseEvent.getButton() == MouseButton.PRIMARY) {
             App.loadScene(fxmlPath); // Mouse left click
@@ -110,35 +140,95 @@ public class addMovieController {
         }
     }
 
+    /**
+     * This method will be called when the upload button is pressed
+     * For loading the Imageview and setting the image for movie object
+     * @param event
+     * @throws Exception
+     */
     @FXML
     public void uploadImagePressed(MouseEvent event) throws Exception {
         // This method will be called when the upload button is clicked
         handleChooseImageButtonAction();
     }
 
+    /**
+     * This method will be called when the apply changes button is pressed
+     * For handling the changes and adding the movie to the database
+     * @param event
+     * @throws Exception
+     */
     @FXML
     public void applyChangesPressed(KeyEvent event) throws Exception {
         // This method will be called when the apply changes button is clicked
-        // Database apply addmovie
-        handleChanges(movie);
-        DatabaseConnection.updateMovie(movie);
-        App.loadScene("AdminMainPage.fxml");
+        if(movie.getTitle() != null && movie.getSummary() != null && movie.getGenre() != null && movie.getPoster() != null){
+            if(!movie.getTitle().isBlank() && !movie.getSummary().isBlank() && !movie.getGenre().equals("Select Genre") && movie.getPoster().length != 0){
+            handleChanges(movie);
+            showAlert("Success", "Movie added successfully");
+            }
+            else{
+                showAlert("Error", "Please fill all the fields");
+            }
+        }
+        else{
+            showAlert("Error", "Please fill all the fields");
+        }
     }
 
+    /**
+     * This method will be called when the apply changes button is clicked
+     * For handling the changes and adding the movie to the database
+     * @param event mouse click event
+     * @throws Exception
+     */
     @FXML
     public void applyChangesClicked(MouseEvent event) throws Exception {
         // This method will be called when the apply changes button is clicked
-        // Database apply addmovie
-        handleChanges(movie);
-        DatabaseConnection.updateMovie(movie);
-        App.loadScene("AdminMainPage.fxml");
+        if(movie.getTitle() != null && movie.getSummary() != null && movie.getGenre() != null && movie.getPoster() != null){
+            if(!movie.getTitle().isBlank() && !movie.getSummary().isBlank() && !movie.getGenre().equals("Select Genre") && movie.getPoster().length != 0){
+            handleChanges(movie);
+            showAlert("Success", "Movie added successfully");
+            }
+            else{
+                showAlert("Error", "Please fill all the fields");
+            }
+        }
+        else{
+            showAlert("Error", "Please fill all the fields");
+        }
     }
 
+    /**
+     * This method will be called when an alert is needed for warning
+     * or success message
+     * @param title of the alert
+     * @param message content of the alert
+     * @throws Exception
+     */
+    public static void showAlert(String title, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * This method will be called when the changes are made
+     * For adding the movie to the database
+     * @param movie object to be loaded to the database
+     * @throws Exception
+     */
     public static void handleChanges(Movie movie) throws Exception {
-        // Handle the changes here
-        //TODO
         DatabaseConnection.addMovie(movie);
     }
+
+    /**
+     * This method will be called when the title text field is typed
+     * to save the content to the movie object
+     * @param event
+     * @throws Exception
+     */
     @FXML
     public void titleTextFieldTyped(KeyEvent event) throws Exception {
         // This method will be called when typing in the title text field
@@ -146,34 +236,41 @@ public class addMovieController {
         movie.setTitle(titleTextField.getText());
     }
 
+    /**
+     * This method will be called when the summary text area is typed
+     * to save the content to the movie object
+     * @param event
+     * @throws Exception
+     */
     @FXML
     public void summaryTextAreaTyped(KeyEvent event) throws Exception {
         // This method will be called when the summary text area is typed
         movie.setSummary(summaryTextArea.getText());
     }
 
-   /*  @FXML
-    public void titleTextFieldChanged(String newValue) {
-        // Handle the text change event
-    }
-
-    @FXML
-    public void summaryTextAreaChanged(String newValue) {
-        // Handle the text change event
-    } */
-
+    /**
+     * This method will be called when the upload Image is clicked
+     * for selecting an image file to be uploaded
+     */
     @FXML
     public void uploadImageClicked() {
         // This method will be called when the upload button is clicked
         handleChooseImageButtonAction();
     }
 
+    /**
+     * This method will be called after the choose image button is clicked
+     * for selecting an image file to be uploaded
+     * Imageview is fixed to show the whatever image ratio is, it is fixed
+     * to the format of the imageview
+     * 
+     * Image object is created and the image is set to the imageview
+     * movie poster is set to the image bytes
+     */
     @FXML
     public void handleChooseImageButtonAction() {
-        // Create a FileChooser
         FileChooser fileChooser = new FileChooser();
 
-        // Set a title for the FileChooser
         fileChooser.setTitle("Select an Image File");
 
         // Set extension filters to accept only image files
@@ -181,7 +278,6 @@ public class addMovieController {
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
         );
 
-        // Show the FileChooser and get the selected file
         File selectedFile = fileChooser.showOpenDialog(uploadImageButton.getScene().getWindow());
 
         if (selectedFile != null) {
@@ -196,7 +292,6 @@ public class addMovieController {
                 movie.setPoster(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle the exception, e.g., show an error message to the user
             }
         }
     }
@@ -204,8 +299,12 @@ public class addMovieController {
     @FXML
     private ChoiceBox<String> genreChoiceBox;
 
+    /**
+     * This method will be used to get the content of the genre choice box
+     * For setting genre for the movie object
+     * @return selected value
+     */
     public String getSelectedValue() {
-        // Get the selected value (returns null if no selection is made)
         return genreChoiceBox.getValue();
     }
 
