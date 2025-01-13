@@ -23,49 +23,89 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class RefundController {
+/**
+ * Controller class for refund page
+ */
+public class RefundController
+{
 
+    /**
+     * Label to display error messages.
+     */
     @FXML
     private Label errorMessage;
 
+    /**
+     * Button to navigate back to the previous screen.
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * TextField for entering bill ID.
+     */
     @FXML
     private TextField bill_id_input;
 
+    /**
+     * Label to display hall ID.
+     */
     @FXML
     private Label hall_id_label;
 
+    /**
+     * Button to submit input data.
+     */
     @FXML
     private Button inputButton;
 
+    /**
+     * Button to log out the user.
+     */
     @FXML
     private Button logout;
 
+    /**
+     * Label to display user's name and surname.
+     */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+     * Button to process product refunds.
+     */
     @FXML
     private Button refundProduct;
 
+    /**
+     * Label to display user's role.
+     */
     @FXML
     private Label roleLabel;
 
-
+    /**
+     * Label to display session ID.
+     */
     @FXML
     private Label session_id_label;
 
+    /**
+     * Label to display the total refunded amount.
+     */
     @FXML
     private Label totalRefundedLabel;
 
+    /**
+     * Label to display the total price.
+     */
     @FXML
     private Label totalPriceLabel;
 
+
     /**
      * Handles the back button click event.
-     * @param event
-     * @throws Exception
+     * @param event keyboard event
+     * @throws Exception for load scene
      */
     @FXML
     void backPressed(KeyEvent event) throws Exception {
@@ -74,8 +114,8 @@ public class RefundController {
 
     /**
      * Handles the logout button click event.
-     * @param event
-     * @throws Exception
+     * @param event mouse event
+     * @throws Exception for laod scene
      */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception {
@@ -84,8 +124,8 @@ public class RefundController {
 
     /**
      * Handles the logout button key press event.
-     * @param event
-     * @throws Exception
+     * @param event keyboard event
+     * @throws Exception for laod scene
      */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception {
@@ -94,14 +134,17 @@ public class RefundController {
 
     /**
      * Handles the back button click event.
-     * @param event
-     * @throws Exception
+     * @param event mouse event
+     * @throws Exception for load scene
      */
     @FXML
     void backClicked(MouseEvent event) throws Exception {
         ManagerController.handleAction(event, null, "AdminMainPage.fxml");
     }
 
+    /**
+     * String to Object map that holds all the related data within the receipt
+     */
     private Map<String, Object> billMap;
 
     /**
@@ -115,8 +158,8 @@ public class RefundController {
         clearData();
         errorMessage.setText("");
         refundProduct.setDisable(true);
-        //nameSurnameLabel.setText(LoginController.loggedEmployee.getFirstname() + " " + LoginController.loggedEmployee.getLastname());
-        //roleLabel.setText(LoginController.loggedEmployee.getUserRole());
+        nameSurnameLabel.setText(LoginController.loggedEmployee.getFirstname() + " " + LoginController.loggedEmployee.getLastname());
+        roleLabel.setText(LoginController.loggedEmployee.getUserRole());
 
         // Bind seatNumber_col to Ticket's seatNumber
         seatNumber_col.setCellValueFactory(cellData -> 
@@ -177,7 +220,14 @@ public class RefundController {
         });
     }
 
+    /**
+     * Product object to store selected product
+     */
     private Product selectedProduct;
+
+    /**
+     * Ticket object to store the selected ticket
+     */
     private Ticket selectedTicket;
 
     /**
@@ -193,8 +243,8 @@ public class RefundController {
     /**
      * Handles the input button click event.
      * Checks for a valid billd ID and fills the bill information labels.
-     * @param event
-     * @throws Exception
+     * @param event mouse event
+     * @throws Exception for laod scene 
      */
     @FXML
     void inputButtonClicked(MouseEvent event)
@@ -218,8 +268,8 @@ public class RefundController {
     /**
      * Handles the enter key press event.
      * Checks for a valid billd ID and fills the bill information labels.
-     * @param event
-     * @throws Exception
+     * @param event keyboard event
+     * @throws Exception for load scene
      */
     @FXML
     void enterClicked(KeyEvent event)
@@ -243,7 +293,7 @@ public class RefundController {
     /**
      * Handles the refund product button click event.
      * Refunds the selected product or ticket and updates the tables.
-     * @param event
+     * @param event mouse event
      */
     @FXML
     void refundClicked(MouseEvent event)
@@ -294,24 +344,61 @@ public class RefundController {
     }
 
 
+    /**
+     * Unique identifier for the bill.
+     */
     private int bill_id;
+
+    /**
+     * Total price of the bill.
+     */
     private double totalPrice;
+
+    /**
+     * Identifier for the hall associated with the bill.
+     */
     private int hall_id;
+
+    /**
+     * Identifier for the session associated with the bill.
+     */
     private int session_id;
+
+    /**
+     * Map storing product quantities by product ID.
+     */
     private Map<Integer, Integer> productQuantities;
+
+    /**
+     * Map storing product prices by product ID.
+     */
     private Map<Integer, Double> productPrices;
+
+    /**
+     * Map storing discounted ticket customers by ticket ID.
+     */
     private Map<Integer, String> discountedTicketCustomers;
+
+    /**
+     * Map storing normal ticket customers by ticket ID.
+     */
     private Map<Integer, String> normalTicketCustomers;
 
-    
-
+    /**
+     * List of tickets associated with the bill.
+     */
     private ArrayList<Ticket> ticketList = new ArrayList<>();
+
+    /**
+     * List of products associated with the bill.
+     */
     private ArrayList<Product> productList = new ArrayList<>();
+
 
     /**
      * Searches the database for the given bill ID and retrieves the bill data.
      * Fills the ticket and product lists with the data.
-     * @param bill_id
+     * @param bill_id primary key for bills
      */
     @SuppressWarnings("unchecked")
     private void searchAndGetBillID(int bill_id)
@@ -370,26 +457,47 @@ public class RefundController {
         fillProductsTable();
     }
 
+    /**
+     * Table for displaying tickets.
+     */
     @FXML
     private TableView<Ticket> ticketsTable;
 
+    /**
+     * Column for seat numbers in tickets table.
+     */
     @FXML
     private TableColumn<Ticket, Integer> seatNumber_col;
+
+    /**
+     * Column for seat prices per unit in tickets table.
+     */
     @FXML
     private TableColumn<Ticket, Double> seatsPricePerUnit_col;
 
-
-
+    /**
+     * Column for product prices per unit in products table.
+     */
     @FXML
     private TableColumn<Product, Double> pricePerUnit_col;
 
+    /**
+     * Column for product IDs in products table.
+     */
     @FXML
     private TableColumn<Product, Integer> productID_col;
 
+    /**
+     * Table for displaying products.
+     */
     @FXML
     private TableView<Product> productsTable;
 
+    /**
+     * Total refunded money amount.
+     */
     private double totalRefundedMoney;
+
 
 
     /**
@@ -489,28 +597,6 @@ public class RefundController {
 
         generateAndSaveHTML();
     }
-
-    /**
-     * Updates the HTML receipt in the database and ensures the local HTML file is synchronized.
-     
-    public void updateBillhtml() {
-        // Prepare updated values for the database
-        Map<String, Object> updatedValues = new HashMap<>();
-        updatedValues.put("totalPrice", this.totalPrice - this.totalRefundedMoney);
-        updatedValues.put("hallID", this.session_id);
-        updatedValues.put("sessionID", this.session_id);
-        updatedValues.put("productQuantities", updatedProductQuantities);
-        updatedValues.put("productPrices", productPrices);
-        updatedValues.put("discountedTicketCustomers", updatedDiscountedTicketCustomers);
-        updatedValues.put("normalTicketCustomers", updatedNormalTicketCustomers);
-
-        // Call the database method to generate and update the HTML content
-        boolean dbUpdated = DatabaseConnection.updateHTMLReceiptInDB(this.bill_id, updatedValues);
-
-        if (!dbUpdated) {
-            throw new RuntimeException("Failed to update the HTML receipt in the database.");
-        }    
-    } */
 
 
    /**
