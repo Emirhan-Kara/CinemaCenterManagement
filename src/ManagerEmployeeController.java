@@ -11,76 +11,147 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Controller class for manager's employee control scene
+ */
 public class ManagerEmployeeController
 {
+    /**
+     * table that lists the employees
+     */
     @FXML
     private TableView<Employee> employeeTable;
 
+    /**
+     * column of the employee table that shows the user id
+     */
     @FXML
     private TableColumn<Employee, String> idCol;
 
+    /**
+     * column of the employee table that shows the user role
+     */
     @FXML
     private TableColumn<Employee, String> roleCol;
 
+    /**
+     * column of the employee table that shows the username
+     */
     @FXML
     private TableColumn<Employee, String> usernameCol;
 
+    /**
+     * column of the employee table that shows the user name
+     */
     @FXML
     private TableColumn<Employee, String> nameCol;
 
+    /**
+     * column of the employee table that shows the user surname
+     */
     @FXML
     private TableColumn<Employee, String> surnameCol;
 
+    /**
+     * column of the employee table that shows the user password
+     */
     @FXML
     private TableColumn<Employee, String> passwordCol;
 
+    /**
+     * back button
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * logout button
+     */
     @FXML
     private Button logout;
 
+    /**
+     * fire button to delete the employee
+     */
     @FXML
     private Button fireButton;
 
+    /**
+     * edit button to edit the employee data
+     */
     @FXML
     private Button editButton;
 
+    /**
+     * hire button
+     */
     @FXML
     private Button hireButton;
 
+    /**
+     * name surname label at top
+     */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+     * role label at top
+     */
     @FXML
     private Label roleLabel;
 
+    /**
+     * selected employee to be editted
+     */
     public static Employee edittedEmployee;    
 
+    /**
+     * event handler for back button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for back button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for logout button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * event handler for logout button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "Login.fxml");
     }
-
+    
+    /**
+     * Initilazer method that sets up the scene, fills the table
+     */
     @FXML
     private void initialize()
     {
@@ -105,6 +176,10 @@ public class ManagerEmployeeController
         editButton.visibleProperty().bind(employeeTable.getSelectionModel().selectedItemProperty().isNotNull());
     }
 
+    /**
+     * Event handler for fire button
+     * @param event mouse event
+     */
     @FXML
     private void fireButtonClicked(MouseEvent event)
     {
@@ -127,13 +202,22 @@ public class ManagerEmployeeController
         }
     }
 
+    /**
+     * Event handler for hire button
+     * @param event mouse event
+     * @throws Exception for load scene
+     */
     @FXML
     private void hireButtonClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "HireEmployeeScene.fxml");
     }
-    // hire ve edit eklencek
-
+    
+    /**
+     * Event handler for edit button
+     * @param event mouse event
+     * @throws Exception for load scene
+     */
     @FXML
     private void editButtonClicked(MouseEvent event) throws Exception
     {
