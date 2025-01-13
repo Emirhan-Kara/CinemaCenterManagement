@@ -1,122 +1,106 @@
+
 /**
- * Represents a ticket for a cinema seat, including its price, seat number, and associated details.
+ * double seat price hold seat's price
+ * int seatNumber indicates the number of seat
+ * int productID id of the ticket(discounted 5 or normal 1)
+ * int hallID 1->A 2->B
+ * int sessionID session's id
+ * 
  */
 public class Ticket {
-
-    /**
-     * The price of the seat.
-     */
     private double seatPrice;
-
-    /**
-     * The number of the seat.
-     */
     private int seatNumber;
+    private int productID; 
 
-    /**
-     * The ID of the product associated with the ticket.
-     */
-    private int productID;
 
-    /**
-     * The ID of the hall where the seat is located.
-     */
     private int hallId;
-
-    /**
-     * The ID of the session associated with the ticket.
-     */
     private int sessionId;
 
     /**
-     * Constructs a new Ticket with the specified seat number, price, and product ID.
-     *
-     * @param seatNum   the seat number.
-     * @param seatPrice the price of the seat.
-     * @param productID the ID of the associated product.
+     * Overloaded constructure to create ticket object
+     * @param seatNum seat number
+     * @param seatPrice price
+     * @param productID disconted or normal
      */
-    public Ticket(int seatNum, double seatPrice, int productID) {
+    Ticket(int seatNum, double seatPrice, int productID)
+    {
         this.seatNumber = seatNum;
+        //this.hallId = hall_id;
+        //this.sessionId = session_id;
         this.seatPrice = seatPrice;
         this.productID = productID;
     }
 
     /**
-     * Gets the product ID associated with the ticket.
-     *
-     * @return the product ID.
+     * call to get id
+     * @return id
      */
-    public int getProductid() {
+    public int getProductid()
+    {
         return this.productID;
     }
 
+    // Getter and Setter for seatNumber
     /**
-     * Gets the seat number associated with the ticket.
-     *
-     * @return the seat number.
+     * to get seat number
+     * @return seat number
      */
     public int getSeatNumber() {
         return seatNumber;
     }
 
     /**
-     * Sets the seat number for the ticket.
-     *
-     * @param seatNumber the new seat number.
+     * set seat number
+     * @param seatNumber seat number
      */
     public void setSeatNumber(int seatNumber) {
         this.seatNumber = seatNumber;
     }
 
     /**
-     * Gets the hall ID associated with the ticket.
-     *
-     * @return the hall ID.
+     * get Hall Id
+     * @return hallId
      */
     public int getHallId() {
         return hallId;
     }
 
     /**
-     * Sets the hall ID for the ticket.
-     *
-     * @param hallId the new hall ID.
+     * set hall id
+     * @param hallId hall id
      */
     public void setHallId(int hallId) {
         this.hallId = hallId;
     }
 
+
     /**
-     * Gets the session ID associated with the ticket.
-     *
-     * @return the session ID.
+     * getter
+     * @return sessionId
      */
     public int getSessionId() {
         return sessionId;
     }
 
     /**
-     * Sets the session ID for the ticket.
-     *
-     * @param sessionId the new session ID.
+     * setter
+     * @param sessionId session
      */
     public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
     }
 
     /**
-     * Gets the price of the seat.
-     *
-     * @return the seat price.
+     * getter
+     * @return seatprice
      */
     public double getSeatPrice() {
         return seatPrice;
     }
 
     /**
-     * Sets the price of the seat.
-     *
-     * @param seatPrice the new seat price.
+     * setter
+     * @param seatPrice prce of seat
      */
     public void setSeatPrice(double seatPrice) {
         this.seatPrice = seatPrice;
