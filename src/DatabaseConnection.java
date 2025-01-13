@@ -15,10 +15,31 @@ import java.sql.Statement;
 import java.sql.Time; // java.sql.Time
 import java.sql.Date;
 
+
+
+
+/**
+ * DatabaseConnection class contains methods that requires conection to database.
+ * connection is a connection object to execute database queries.
+ */
 public class DatabaseConnection {
     public static Connection connection;
 
-    // Static block to initialize the connection
+        /**
+     * Static initializer block to establish the connection with MySQL database.
+     * 
+     * Loads the MySQL JDBC driver com.mysql.cj.jdbc.Driver
+     * Establishes the connection to the database using the parameters below
+     *         
+     * URL: {@code jdbc:mysql://localhost:3306/cinemacenter?useSSL=false&serverTimezone=UTC}</li>
+     * Username: {@code myuser}
+     * Password: {@code 1234}
+     *
+     * In case of an exception, it logs the stack trace and throws a {@link RuntimeException} 
+     * indicating a failiure
+     *
+     * @throws RuntimeException if connection fails
+     */
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -33,11 +54,13 @@ public class DatabaseConnection {
         }
     }
 
-    /*
-    *
-    *
-    */
-    // Authentication method
+    /**
+     * Authenticates a user, checking their username and password from the database.
+     *
+     * @param username the username 
+     * @param password the password 
+     * @return a employee object if authentication is successful, null otherwise
+     */
     public static Employee authenticate(String username, String password) {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -65,12 +88,11 @@ public class DatabaseConnection {
         }
     }
 
-    /*
-    *
-    *
-    */
-    ////////////////////////////////////////////////
-    // Method to list all employees except managers
+    /**
+     * Get a list of all employees from the database, exclude manager.
+     *
+     * @return a list of Employee objects
+     */
     public static List<Employee> listEmployees() {
         List<Employee> employees = new ArrayList<>();
         String query = "SELECT * FROM users WHERE user_role != 'manager'";
@@ -108,22 +130,13 @@ public class DatabaseConnection {
 
         return employees;
     }
-    /*  
-    *
-    *
-    */
-
-    public static boolean DeleteEmployee(int id) {
-        String query = "DELETE users WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, id);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
+    
+    /**
+     * Update an employee's info, save database
+     *
+     * @param employee updated employee object 
+     * @return true if updated  
+     */
     public static boolean updateEmployee(Employee employee) {
         String query = "UPDATE users SET user_role = ?, username = ?, firstname = ?, lastname = ?, password = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -145,6 +158,12 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Deletes an employee from the database by ID.
+     *
+     * @param id, ID of the employee 
+     * @return true if the deletion was successful
+     */
     public static boolean deleteEmployee(int id) {
         String query = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -156,6 +175,12 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Adds a new employee to the database.
+     *
+     * @param employee new Employee object that holding details
+     * @return true he/she successfully added
+     */
     public static boolean hireEmployee(Employee employee) {
         String query = "INSERT INTO users (firstname, lastname, username, password, user_role) VALUES (?, ?, ?, ?, ?)";
 
@@ -174,6 +199,14 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Checks if a specific value exists in a given column of a specified table in the database.
+     *
+     * @param tableName  the name of the table to query
+     * @param columnName the name of the column to search
+     * @param value      the value to look for in the column
+     * @return {@code true} if the value exists in the specified column of the table, {@code false} otherwise
+     */
     public static boolean isValueInColumnOfTable(String tableName, String columnName, String value) {
         String query = "SELECT 1 FROM " + tableName + " WHERE " + columnName + " = ? LIMIT 1";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -186,12 +219,14 @@ public class DatabaseConnection {
         }
     }
 
-    /*  
-    *
-    *
-    */
-    /////////////////////////////////////////////////
-    // Method to fetch all or filtered products
+    
+    /**
+     * Gets a list of products from the database, filtering optional.
+     *
+     * @param filterQuery filter query {@code WHERE id > ?} etc
+     * @param params      the parameters for filter query placeholders, if any
+     * @return list of products retrieved from the database
+     */
     public static List<Product> getProducts(String filterQuery, Object... params) {
         List<Product> products = new ArrayList<>();
         String query = "SELECT * FROM products " + (filterQuery != null ? filterQuery : "");
@@ -229,10 +264,13 @@ public class DatabaseConnection {
         return products;
     }
 
-    /*
-    *
-    *
-    */
+    /**
+     * Update existing product in the database.
+     *
+     * @param product object containing updated information
+     * @return true if the update was successful
+     */
+
     public static boolean updateProduct(Product product) {
         String query = "UPDATE products SET product_name = ?, price = ?, stock = ?, agebased_disc_rate = ?, visuals = ?, sold = ?, totalrevenue = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -256,15 +294,11 @@ public class DatabaseConnection {
         }
     }
 
-    /*
-    *
-    *
-    */
-    /*
-     * MOVIE THINGS
+    /**
+     * 
+     * @param movie object to add database
+     * @return status of execution true or false
      */
-    ///////////////////////////////////////////////////
-
     public static boolean addMovie(Movie movie) {
         String query = "INSERT INTO Movie (title, genre, poster, summary) VALUES (?, ?, ?, ?)";
 
@@ -288,6 +322,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * 
+     * @param movie object which existing in DB, will be updated
+     * @return tha state of execution 0/1
+     */
     public static boolean updateMovie(Movie movie) {
         String query = "UPDATE Movie SET title = ?, genre = ?, poster = ?, summary = ? WHERE id = ?";
 
@@ -311,7 +350,11 @@ public class DatabaseConnection {
             return false; // Return false in case of an error
         }
     }
-
+    /**
+     * 
+     * @param movieId id of a movie to delete from DB
+     * @return state of execution t/f
+     */
     public static boolean deleteMovie_byID(int movieId) {
         String query = "DELETE FROM Movie WHERE id = ?";
 
@@ -383,7 +426,11 @@ public class DatabaseConnection {
         return null; // Return null if no movie is found
     }
 
-
+    /**
+     * 
+     * @param title title of movie that wanted
+     * @return movie object
+     */
     public static Movie getMovie_byTitle(String title) {
         String query = "SELECT * FROM Movie WHERE title = ?";
     
@@ -409,8 +456,10 @@ public class DatabaseConnection {
     }
 
 
-    /*
-     * Get movies by selected genre, including genre and summary.
+    /**
+     * 
+     * @param genre of wanted movie
+     * @return after checking genred of movie return related movies as a list
      */
     public static List<Movie> SearchBy_Genre(String genre) {
         List<Movie> movies = new ArrayList<>();
@@ -436,8 +485,10 @@ public class DatabaseConnection {
         return movies;
     }
 
-    /*
-     * Search movies by partial title, including genre and summary.
+    /**
+     * 
+     * @param partialTitle it might be also the full title to searh in DB
+     * @return related movies as list of movie object
      */
     public static List<Movie> SearchBy_Title(String partialTitle) {
         List<Movie> movies = new ArrayList<>();
@@ -463,8 +514,11 @@ public class DatabaseConnection {
         return movies;
     }
 
-    /*
-     * Search movies by title and genre, including genre and summary.
+    /**
+     * search in db related movies
+     * @param inputTitle partial or full title
+     * @param genre of movie if it is requested
+     * @return movie object list
      */
     public static List<Movie> searchBy_title_genre(String inputTitle, String genre) {
         List<Movie> movies = new ArrayList<>();
@@ -502,6 +556,10 @@ public class DatabaseConnection {
         return movies;
     }
 
+    /**
+     * 
+     * @return hall list
+     */
     public static List<Integer> getHalls()
     {
         List<Integer> halls = new ArrayList<>();
@@ -521,14 +579,12 @@ public class DatabaseConnection {
     
     }
 
-    /*
-     *
-     *
-     *
-     *
-     * 
-     * Bill issues
-     * 
+    /**
+     * updating seat states
+     * @param hallId id
+     * @param sessionId session id
+     * @param seatNumber seat number
+     * @param seatValue seat value according to bill id
      */
     public static void updateSeatInHall(int hallId, int sessionId, int seatNumber, int seatValue) {
         String hall = (hallId == 1 ? "HallA" : "HallB");
@@ -542,6 +598,12 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * track of number of booked seats
+     * @param hallId id
+     * @param sessionId session id
+     * @param quantity quantity of seat booked seat = 1
+     */
     public static void incrementBookedSeats(int hallId, int sessionId, int quantity) {
         String hall = (hallId == 1 ? "HallA" : "HallB");
         String query = "UPDATE " + hall + " SET numberOfBooked = numberOfBooked + ? WHERE sessionID = ?";
@@ -554,6 +616,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * to get product price
+     * @param productId id
+     * @return price
+     */
     public static double getProductPrice(int productId) {
         String query = "SELECT price FROM products WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -567,82 +634,12 @@ public class DatabaseConnection {
         }
         return 0.0;
     }
-
-    /*
-     * public static boolean saveBillToDB(Bill bill) { ///updates stocks
-     * String insertBillQuery = "INSERT INTO bills (total_price) VALUES (?)";
-     * String insertBillProductsQuery =
-     * "INSERT INTO bill_products (bill_id, product_id, quantity) VALUES (?, ?, ?)";
-     * 
-     * try {
-     * // Insert bill and get generated bill ID
-     * PreparedStatement billStmt = connection.prepareStatement(insertBillQuery,
-     * Statement.RETURN_GENERATED_KEYS);
-     * billStmt.setDouble(1, bill.getTotalPrice());
-     * billStmt.executeUpdate();
-     * ResultSet rs = billStmt.getGeneratedKeys();
-     * if (rs.next()) {
-     * bill.setId(rs.getInt(1));
-     * }
-     * 
-     * // Insert products related to the bill
-     * PreparedStatement productsStmt =
-     * connection.prepareStatement(insertBillProductsQuery);
-     * for (Map.Entry<Integer, Integer> entry :
-     * bill.getProductQuantities().entrySet()) {
-     * productsStmt.setInt(1, bill.getId());
-     * productsStmt.setInt(2, entry.getKey());
-     * productsStmt.setInt(3, entry.getValue());
-     * productsStmt.addBatch();
-     * 
-     * updateProductStockAndSales_DB(entry.getKey(), entry.getValue());
-     * }
-     * productsStmt.executeBatch();
-     * 
-     * return true;
-     * } catch (SQLException e) {
-     * e.printStackTrace();
-     * return false;
-     * }
-     * }
+    /**
+     * to update stock and sold column
+     * @param productId id
+     * @param quantity amount
+     * @return
      */
-    /*
-     * ////////////////
-     * public static Bill getBillById(int billId) {
-     * Bill bill = new Bill(billId);
-     * 
-     * // Fetch bill metadata
-     * String billQuery = "SELECT total_price FROM bills WHERE id = ?";
-     * try (PreparedStatement pstmt = connection.prepareStatement(billQuery)) {
-     * pstmt.setInt(1, billId);
-     * ResultSet rs = pstmt.executeQuery();
-     * if (rs.next()) {
-     * bill.setId(billId);
-     * bill.calculateTotalPrice();
-     * }
-     * } catch (SQLException e) {
-     * e.printStackTrace();
-     * }
-     * 
-     * // Fetch bill items
-     * String itemQuery =
-     * "SELECT product_id, quantity FROM bill_items WHERE bill_id = ?";
-     * try (PreparedStatement pstmt = connection.prepareStatement(itemQuery)) {
-     * pstmt.setInt(1, billId);
-     * ResultSet rs = pstmt.executeQuery();
-     * while (rs.next()) {
-     * int productId = rs.getInt("product_id");
-     * int quantity = rs.getInt("quantity");
-     * bill.addProduct(productId, quantity);
-     * }
-     * } catch (SQLException e) {
-     * e.printStackTrace();
-     * }
-     * 
-     * return bill;
-     * }
-     */
-
     public static boolean updateProductStockAndSales_DB(int productId, int quantity) {
         double price = getProductPrice(productId);
         double fluctuation = price * quantity;
@@ -679,6 +676,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * obtain receipt from DB
+     * @param billId id 
+     * @return map of different objects contains maps and lists
+     */
     public static Map<String, Object> getReceiptfrDB(int billId) {
         String query = "SELECT htmlReceipt FROM bills WHERE id = ?";
         Map<Integer, Integer> productQuantities = new HashMap<>();
@@ -809,6 +811,12 @@ public class DatabaseConnection {
     
         return result;
     }
+    /**
+     * updating bill price column after return
+     * @param billid id
+     * @param total_price total price
+     * @throws SQLException in a case of exception 
+     */
     public static void updatetotalpricebill(int billid, double total_price) throws SQLException
     {
         String query = "UPDATE bills SET total_price = ? WHERE id = ?";
@@ -825,6 +833,12 @@ public class DatabaseConnection {
 
     
     // Helper Methods
+    /**
+     * to read html correctly
+     * @param line line
+     * @param key key
+     * @return
+     */
     private static String extractValueAsString(String line, String key) {
         int startIndex = line.indexOf(key) + key.length();
         StringBuilder value = new StringBuilder();
@@ -837,104 +851,26 @@ public class DatabaseConnection {
         }
         return value.toString().trim();
     }
-    
+    /**
+     * to read html correctly
+     * @param line line
+     * @param key key
+     * @return
+     */
     private static Integer extractValueAsInteger(String line, String key) {
         return Integer.parseInt(extractValueAsString(line, key));
     }
-    
+    /**
+     * to read html correctly
+     * @param line line
+     * @param key key
+     * @return
+     */
     private static Double extractValueAsDouble(String line, String key) {
         String valueStr = extractValueAsString(line, key).replace("$", ""); // Remove $ symbol for prices
         return Double.parseDouble(valueStr);
     }
      
-
-    /**
-     * Updates the HTML receipt in the database based on the provided updated map
-     * values.
-     *
-     * @param billId        The ID of the bill to update.
-     * @param updatedValues A map containing updated values:
-     *                      - "totalPrice": Double (updated total price)
-     *                      - "hallID": Integer (updated Hall ID)
-     *                      - "sessionID": Integer (updated Session ID)
-     *                      - "productQuantities": Map<Integer, Integer> (updated
-     *                      Product ID -> Quantity)
-     *                      - "productPrices": Map<Integer, Double> (updated Product
-     *                      ID -> Price per Unit)
-     *                      - "discountedTicketCustomers": Map<Integer, String>
-     *                      (updated Seat Number -> Customer Name for discounted
-     *                      tickets)
-     *                      - "normalTicketCustomers": Map<Integer, String> (updated
-     *                      Seat Number -> Customer Name for normal tickets)
-     * @return True if the update is successful, false otherwise.
-     */
-
-     /* bu kod foolish
-    @SuppressWarnings("unchecked")
-    public static boolean updateHTMLReceiptInDB(int billId, Map<String, Object> updatedValues) {
-        // Extract updated values from the map
-        Double totalPrice = (Double) updatedValues.get("totalPrice");
-        Integer hallID = (Integer) updatedValues.get("hallID");
-        Integer sessionID = (Integer) updatedValues.get("sessionID");
-        Map<Integer, Integer> productQuantities = (Map<Integer, Integer>) updatedValues.get("productQuantities");
-        Map<Integer, Double> productPrices = (Map<Integer, Double>) updatedValues.get("productPrices");
-        Map<Integer, String> discountedTicketCustomers = (Map<Integer, String>) updatedValues.get("discountedTicketCustomers");
-        Map<Integer, String> normalTicketCustomers = (Map<Integer, String>) updatedValues.get("normalTicketCustomers");
-
-        // Generate the updated HTML content
-        StringBuilder html = new StringBuilder();
-        html.append("<html>\n");
-        html.append("<head>\n<title>Bill ").append(billId).append("</title>\n</head>\n");
-        html.append("<body>\n");
-        html.append("<h1>Bill ID: ").append(billId).append("</h1>\n");
-        html.append("<h2>Total Price: $").append(totalPrice).append("</h2>\n");
-        html.append("<h3>Hall ID: ").append(hallID).append("</h3>\n");
-        html.append("<h3>Session ID: ").append(sessionID).append("</h3>\n");
-
-        html.append("<h3>Products:</h3>\n<ul>\n");
-        for (Map.Entry<Integer, Integer> entry : productQuantities.entrySet()) {
-            int productId = entry.getKey();
-            int quantity = entry.getValue();
-            double price = productPrices.getOrDefault(productId, 0.0);
-            html.append("<li>Product ID: ").append(productId)
-                    .append(", Quantity: ").append(quantity)
-                    .append(", Price per Unit: $").append(price)
-                    .append("</li>\n");
-        }
-        html.append("</ul>\n");
-
-        html.append("<h3>Discounted Tickets:</h3>\n<ul>\n");
-        for (Map.Entry<Integer, String> entry : discountedTicketCustomers.entrySet()) {
-            html.append("<li>Seat Number: ").append(entry.getKey())
-                    .append(", Customer Name: ").append(entry.getValue()).append("</li>\n");
-        }
-        html.append("</ul>\n");
-
-        html.append("<h3>Normal Tickets:</h3>\n<ul>\n");
-        for (Map.Entry<Integer, String> entry : normalTicketCustomers.entrySet()) {
-            html.append("<li>Seat Number: ").append(entry.getKey())
-                    .append(", Customer Name: ").append(entry.getValue()).append("</li>\n");
-        }
-        html.append("</ul>\n");
-
-        html.append("</body>\n");
-        html.append("</html>\n");
-
-        // Update the database with the new HTML content
-        String updateQuery = "UPDATE bills SET htmlReceipt = ?, total_price = ? WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
-            pstmt.setString(1, html.toString()); // Updated HTML content
-            pstmt.setDouble(2, totalPrice);
-            pstmt.setInt(3, billId); // Bill ID
-
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0; // Return true if successful
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    } */
-
     /**
      * refund process completed by updating the hall seat status and product stocks.
      *
@@ -996,7 +932,10 @@ public class DatabaseConnection {
         }
     }
 
-    ////////////////////CHECK THE METHODS ABOVE IM NOT SURE ABOUT THEM
+    /**
+     * 
+     * @return a list of session object 
+     */
     public static List<Sessions> getSessions() { ///🟡🔺newnew
         List<Sessions> sessionsList = new ArrayList<>();
 
@@ -1023,6 +962,11 @@ public class DatabaseConnection {
     }
 
     // AFTER CUSTOMER SELECTS A MOVIE, TO SEE THE SESSIONS CALL THIS
+    /**
+     * by id get related sessions
+     * @param movieId 
+     * @return a list of session object
+     */
     public static List<Sessions> getSessionsOfMovie(int movieId) {
         List<Sessions> sessionsList = new ArrayList<>();
 
@@ -1050,6 +994,12 @@ public class DatabaseConnection {
     }
 
     /////////////SEAT AVAILABILITY ARRAY AND TOTAL BOOKED
+    /**
+     * to see available seats
+     * @param sessionId id
+     * @param hallId id
+     * @return int array of seats status
+     */
     public static int[] Seat_Availability_Array(int sessionId, int hallId) {
         String hallTable = (hallId == 1) ? "HallA" : "HallB"; // Determine the hall table
         String query = "SELECT * FROM " + hallTable + " WHERE sessionID = ?";
@@ -1082,11 +1032,12 @@ public class DatabaseConnection {
      * 
      * SESSION ISSUES
      */
+
     /**
      * Adds a new session to the database after ensuring no conflicts.
      *
-     * @param session The Sessions object containing the session details.
-     * @return True if the session is added, false otherwise.
+     * @param session The Sessions object containing the session details
+     * @return True if the session is addede
      */
     public static boolean addSession(Sessions session) {
         // Check if a session with the same hallId, date, and time already exists
@@ -1124,16 +1075,15 @@ public class DatabaseConnection {
     }
 
     /**
-     * Deletes a session from the database and related hall table after checking
-     * conditions:
-     * - If seats are booked, the session cannot be deleted unless the date has
+     * Deletes a session from the database and related hall table 
+     * - If seats are booked, the session cannot be deleted except the date has
      * passed.
-     * - Removes the session from both the `sessions` table and the related hall
-     * table.
+     * - deletes the session from both the `sessions` table and the related hall
+     * table
      *
-     * @param sessionId The ID of the session to be deleted.
-     * @param hallId    The ID of the hall associated with the session.
-     * @return True if the session is deleted successfully, false otherwise.
+     * @param sessionId The ID of the session 
+     * @param hallId    The ID of the sessions's hall  
+     * @return True if the session is deleted successfully
      */
     public static boolean deleteSession(int sessionId, int hallId) {
         // Determine the hall table name based on the hall ID
@@ -1204,12 +1154,12 @@ public class DatabaseConnection {
     }
 
     /**
-     * Updates a session in the database after ensuring there are no conflicts.
-     * Ensures related hall tables are updated if the hall changes.
+     * Updates a session ensures there are no conflicts
+     * Ensures related hall tables are updated 
      *
-     * @param oldSession The existing session details.
-     * @param newSession The new session details.
-     * @return True if the session is updated successfully, false otherwise.
+     * @param oldSession The existing session object
+     * @param newSession The new session object
+     * @return True if the session is updated successfully
      */
     public static boolean updateSession(Sessions oldSession, Sessions newSession) {
         // Determine old and new hall table names
