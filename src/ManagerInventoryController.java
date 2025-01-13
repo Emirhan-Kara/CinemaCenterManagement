@@ -8,58 +8,116 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class ManagerInventoryController {
-
+/**
+ * Controller class for stocks scene
+ */
+public class ManagerInventoryController
+{
+    /**
+     * Displays user role.
+     */
     @FXML
     private Label roleLabel;
 
+    /**
+     * Displays user name and surname.
+     */
     @FXML
     private Label nameSurnameLabel;
 
+    /**
+     * Navigates back to the previous screen.
+     */
     @FXML
     private Button backButton;
 
+    /**
+     * Opens beverage-related actions.
+     */
     @FXML
     private Button beverageButton;
 
+    /**
+     * Displays new beverage stock.
+     */
     @FXML
     private Label beverageNewStock;
 
+    /**
+     * Slider for beverage stock adjustment.
+     */
     @FXML
     private Slider beverageSlider;
 
+    /**
+     * Displays current beverage stock.
+     */
     @FXML
     private Label beverageStock;
 
+    /**
+     * Opens food-related actions.
+     */
     @FXML
     private Button foodButton;
 
+    /**
+     * Displays new food stock.
+     */
     @FXML
     private Label foodNewStock;
 
+    /**
+     * Slider for food stock adjustment.
+     */
     @FXML
     private Slider foodSlider;
 
+    /**
+     * Displays current food stock.
+     */
     @FXML
     private Label foodStock;
 
+    /**
+     * Logs out the user.
+     */
     @FXML
     private Button logout;
 
+    /**
+     * Opens toy-related actions.
+     */
     @FXML
     private Button toyButton;
 
+    /**
+     * Displays new toy stock.
+     */
     @FXML
     private Label toyNewStock;
 
+    /**
+     * Slider for toy stock adjustment.
+     */
     @FXML
     private Slider toySlider;
 
+    /**
+     * Displays current toy stock.
+     */
     @FXML
     private Label toyStock;
 
+    /**
+     * List of all products.
+     */
     private List<Product> allProducts;
 
+
+    /**
+     * Initializer to setup the scene and get all the product data
+     */
     @FXML
     public void initialize()
     {
@@ -75,12 +133,20 @@ public class ManagerInventoryController {
         connectTextWithSlider(toySlider, toyNewStock);
     }
 
+    /**
+     * Helper method to bind the proper labels with proper sliders
+     * @param slider slider
+     * @param newStockLabel label
+     */
     private void connectTextWithSlider(Slider slider, Label newStockLabel)
     {
         // Bind the new stock label to the slider's value
         newStockLabel.textProperty().bind(slider.valueProperty().asString("%.0f"));
     }
 
+    /**
+     * Update the labels on the scene
+     */
     private void updatePriceLabels()
     {
         // Get the stocks from database
@@ -94,7 +160,11 @@ public class ManagerInventoryController {
         this.toyStock.setText(String.valueOf(toyStockDB));
     }
 
-
+    /**
+     * updates the selected product both in database and in scene
+     * @param slider slider to be extracted of its value
+     * @param productIdx prouct index
+     */
     private void updateSelectedProduct(Slider slider, int productIdx)
     {
         // get the number to be added to the stock from the slider
@@ -114,32 +184,55 @@ public class ManagerInventoryController {
     }
 
 
+    /**
+     * event handler for back button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void backClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for back button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void backPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "ManagerMainMenu.fxml");
     }
 
+    /**
+     * event handler for logout button click
+     * @param event mouns event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutClicked(MouseEvent event) throws Exception
     {
         ManagerController.handleAction(event, null, "Login.fxml");
     }
 
+    /**
+     * event handler for logout button press
+     * @param event keyboard event
+     * @throws Exception for load scene
+     */
     @FXML
     void logoutPressed(KeyEvent event) throws Exception
     {
         ManagerController.handleAction(null, event, "Login.fxml");
     }
+  
 
-
-
+    /**
+     * event handler for beverage adding
+     * @param event mouse event
+     */
     @FXML
     void beverageClicked(MouseEvent event)
     {
@@ -150,6 +243,10 @@ public class ManagerInventoryController {
         updateSelectedProduct(beverageSlider, 2);
     }
 
+    /**
+     * event handler for food adding
+     * @param event mouse event
+     */
     @FXML
     void foodClicked(MouseEvent event)
     {
@@ -159,6 +256,10 @@ public class ManagerInventoryController {
         updateSelectedProduct(foodSlider, 1);
     }
 
+    /**
+     * event handler for toy adding
+     * @param event mouse event
+     */
     @FXML
     void toyClicked(MouseEvent event)
     {
