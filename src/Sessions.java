@@ -1,6 +1,9 @@
 import java.sql.Date;
 import java.sql.Time;
 
+/**
+ * Represents a movie session, containing details about the session's ID, hall, movie, date, and time.
+ */
 public class Sessions {
     private int id;
     private int hallId;
@@ -8,14 +11,14 @@ public class Sessions {
     private Date date;
     private Time time;
 
-    
     /**
-     * Full constructor for Sessions
-     * @param id
-     * @param hallId
-     * @param movieId
-     * @param date
-     * @param time
+     * Full constructor for creating a Sessions object with all attributes.
+     *
+     * @param id     the unique identifier for the session.
+     * @param hallId the ID of the hall where the session is held.
+     * @param movieId the ID of the movie being shown in the session.
+     * @param date   the date of the session.
+     * @param time   the time of the session.
      */
     public Sessions(int id, int hallId, int movieId, Date date, Time time) {
         this.id = id;
@@ -26,11 +29,12 @@ public class Sessions {
     }
 
     /**
-     * Constructor for Sessions without id for flexibility
-     * @param hallId
-     * @param movieId
-     * @param date
-     * @param time
+     * Constructor for creating a Sessions object without an ID, for use cases where the ID is not yet assigned.
+     *
+     * @param hallId the ID of the hall where the session is held.
+     * @param movieId the ID of the movie being shown in the session.
+     * @param date   the date of the session.
+     * @param time   the time of the session.
      */
     public Sessions(int hallId, int movieId, Date date, Time time) {
         this.hallId = hallId;
@@ -40,98 +44,105 @@ public class Sessions {
     }
 
     /**
-     * Default constructor for Sessions
-     * @param hallId
-     * @param movieId
-     * @param time
+     * Default constructor for creating a Sessions object with no initial attributes.
      */
     public Sessions() {
-        
     }
 
     /**
-     * Getter for ID
-     * @return
+     * Gets the session's unique identifier.
+     *
+     * @return the session ID.
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Getter for Hall ID
-     * @return
+     * Gets the ID of the hall where the session is held.
+     *
+     * @return the hall ID.
      */
     public int getHallId() {
         return hallId;
     }
 
     /**
-     * Getter for Movie ID
-     * @return
+     * Gets the ID of the movie being shown in the session.
+     *
+     * @return the movie ID.
      */
     public int getMovieId() {
         return movieId;
     }
 
     /**
-     * Getter for Date
-     * @return
+     * Gets the date of the session.
+     *
+     * @return the session date.
      */
     public Date getDate() {
         return date;
     }
 
     /**
-     * Getter for Time
-     * @return
+     * Gets the time of the session.
+     *
+     * @return the session time.
      */
     public Time getTime() {
         return time;
     }
 
     /**
-     * Setter for ID
-     * @param id
+     * Sets the session's unique identifier.
+     *
+     * @param id the session ID to set.
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * Setter for Hall ID
-     * @param hallId
+     * Sets the ID of the hall where the session is held.
+     *
+     * @param hallId the hall ID to set.
      */
     public void setHallId(int hallId) {
         this.hallId = hallId;
     }
 
     /**
-     * Setter for Movie ID
-     * @param movieId
+     * Sets the ID of the movie being shown in the session.
+     *
+     * @param movieId the movie ID to set.
      */
     public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 
     /**
-     * Setter for Date
-     * @param date
+     * Sets the date of the session.
+     *
+     * @param date the session date to set.
      */
     public void setDate(Date date) {
         this.date = date;
     }
 
     /**
-     * Setter for Time
-     * @param time
+     * Sets the time of the session.
+     *
+     * @param time the session time to set.
      */
     public void setTime(Time time) {
         this.time = time;
     }
 
     /**
-     * toString method for Sessions
-     * @return Sessions as a string
+     * Provides a string representation of the Sessions object.
+     *
+     * @return a string describing the session's attributes.
      */
     @Override
     public String toString() {
