@@ -5,19 +5,40 @@ import java.sql.Time;
  * Schedule class for showing sessions in the tableview of admin page
  * Sessions store movie id, schedule store movie title 
  */
-public class Schedule {
-    Integer id;
+public class Schedule
+{
+    /**
+     * Unique identifier for the session.
+     */
+    private Integer id;
+
+    /**
+     * Identifier for the hall.
+     */
     private int hallId;
+
+    /**
+     * Name of the movie.
+     */
     private String movie;
+
+    /**
+     * Date of the session.
+     */
     private Date date;
+
+    /**
+     * Time of the session.
+     */
     private Time time;
+
 
     /**
      * Schedule constructor
-     * @param hallId
-     * @param movie
-     * @param date
-     * @param time
+     * @param hallId hall id
+     * @param movie title
+     * @param date date
+     * @param time time
      */
     public Schedule(int hallId, String movie, Date date, Time time) {
         this.hallId = hallId;
@@ -28,11 +49,11 @@ public class Schedule {
 
     /**
      * Schedule constructor with id
-     * @param hallId
-     * @param movie
-     * @param date
-     * @param time
-     * @param id
+     * @param hallId hall id
+     * @param movie title
+     * @param date date
+     * @param time time
+     * @param id id
      */
     public Schedule(int hallId, String movie, Date date, Time time, Integer id) {
         this.id = id;
@@ -44,8 +65,8 @@ public class Schedule {
 
     /**
      * Getter for a session object from the related schedule object
-     * @param schedule
-     * @return
+     * @param schedule shcedule obejct to retrive its session
+     * @return session object for that schedule
      */
     Sessions getSession(Schedule schedule) {
         return new Sessions(this.hallId, DatabaseConnection.getMovie_byTitle(this.movie).getId(), this.date, this.time);
@@ -59,7 +80,7 @@ public class Schedule {
 
     /**
      * Getter for the date
-     * @return
+     * @return date
      */
     public Date getDate() {
         return this.date;
@@ -67,7 +88,7 @@ public class Schedule {
 
     /**
      * Getter for the hall id
-     * @return
+     * @return hall id
      */
     public Integer getHallId() {
         return this.hallId;
@@ -75,7 +96,7 @@ public class Schedule {
 
     /**
      * Getter for the time
-     * @return
+     * @return time
      */
     public Time getTime() {
         return this.time;
@@ -83,7 +104,7 @@ public class Schedule {
 
     /**
      * Getter for the movie title
-     * @return
+     * @return title
      */
     public String getMovie() {
         return this.movie;
@@ -91,7 +112,7 @@ public class Schedule {
 
     /**
      * Setter for the date
-     * @param date
+     * @param date date to be set
      */
     public void setDate(Date date) {
         this.date = date;
@@ -99,7 +120,7 @@ public class Schedule {
 
     /**
      * Setter for the hall id
-     * @param hallId
+     * @param hallId hall id to be set
      */
     public void setHallId(int hallId) {
         this.hallId = hallId;
@@ -107,7 +128,7 @@ public class Schedule {
 
     /**
      * Setter for the time
-     * @param time
+     * @param time time to be set
      */
     public void setTime(Time time) {
         this.time = time;
@@ -115,7 +136,7 @@ public class Schedule {
 
     /**
      * Setter for the movie title
-     * @param movie
+     * @param movie title to be set
      */
     public void setMovie(String movie) {
         this.movie = movie;
@@ -123,7 +144,7 @@ public class Schedule {
 
     /**
      * Setter for the id
-     * @param id
+     * @param id id to be set
      */
     void setId(Integer id) {
         this.id = id;
@@ -131,7 +152,7 @@ public class Schedule {
 
     /**
      * Getter for the id
-     * @return
+     * @return id
      */
     Integer getId() {
         return this.id;
