@@ -9,7 +9,14 @@ public class Movie {
     public byte[] poster; // Poster image stored as a byte array
     public String summary; // Movie summary
 
-    // Constructor
+    /**
+     * Constructor for the Movie class
+     * @param id
+     * @param title
+     * @param genre
+     * @param poster
+     * @param summary
+     */
     public Movie(int id, String title, String genre, byte[] poster, String summary) {
         this.id = id;
         this.title = title;
@@ -18,13 +25,18 @@ public class Movie {
         this.summary = summary;
     }
 
+    /**
+     * Default constructor for the Movie class
+     */
     public Movie() {
-        // Default constructor
+        
     }
 
-    // Copy constructor
-    public Movie(Movie movie)
-    {
+    /**
+     * Copy constructor for the Movie class
+     * @param movie
+     */
+    public Movie(Movie movie) {
         this.title = movie.title;
         this.genre = movie.genre;
         this.summary = movie.summary;
@@ -32,7 +44,10 @@ public class Movie {
         this.id = movie.id;
     }
 
-    // Method to set the poster from a file
+    /**
+     * Method to set the movie poster, ImageView, from a file
+     * @param file
+     */
     public void setPosterFromFile(File file) {
         try {
             this.poster = Files.readAllBytes(file.toPath());
@@ -41,7 +56,10 @@ public class Movie {
         }
     }
 
-    // Method to save the poster to a file
+    /**
+     * Method to save the movie poster to a file
+     * @param file
+     */
     public void savePosterToFile(File file) {
         try {
             if (this.poster != null) {
@@ -54,6 +72,10 @@ public class Movie {
         }
     }
 
+    /**
+     * Method to get string representation of the Movie object
+     * @return
+     */
     @Override
     public String toString() {
         return "Movie{" +
@@ -64,52 +86,82 @@ public class Movie {
                '}';
     }
 
-    // Getter for title
+    /**
+     * Getter for title
+     * @return string
+     */
     public String getTitle() {
         return title;
     }
 
-    // Setter for title
+    /**
+     * Setter for title
+     * @param title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    // Getter for genre
+    /**
+     * Getter for genre
+     * @return genre of the movie
+     */
     public String getGenre() {
         return genre;
     }
 
-    // Setter for genre
+    /**
+     * Setter for genre
+     * @param genre
+     */
     public void setGenre(String genre) {
         this.genre = genre;
     }
 
-    // Getter for summary
+    /**
+     * Getter for summary
+     * @return summary of the movie
+     */
     public String getSummary() {
         return summary;
     }
 
-    // Setter for summary
+    /**
+     * Setter for summary
+     * @param summary
+     */
     public void setSummary(String summary) {
         this.summary = summary;
     }
 
-    // Getter for poster
+    /**
+     * Getter for poster
+     * @return poster in byte array format
+     */
     public byte[] getPoster() {
         return poster;
     }
 
-    // Setter for poster
+    /**
+     * Setter for poster
+     * @param poster
+     */
     public void setPoster(byte[] poster) {
         this.poster = poster;
     }
 
-    // Getter for id
+    /**
+     * Getter for id
+     * @return
+     */
     public int getId() {
         return id;
     }
 
-    // Setter for id
+    /**
+     * Setter for id
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
